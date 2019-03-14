@@ -59,6 +59,91 @@ Non-core:
 
 ## eth module
 
+### eth_accounts [EXAMPLE]
+
+Returns a list of addresses owned by kernel.
+
+#### Parameters
+
+None
+
+#### Returns
+
+* `Array` - 64 Bytes - addresses owned by the kernel.
+
+#### Examples
+
+##### Request
+
+        curl --data '{"method":"TODO","params":["TODO"],"id":"TODO","jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+
+##### Response
+
+        {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "result": ["TODO"]
+        }
+
+
+### eth_blockNumber
+### eth_call
+### eth_coinbase
+### eth_compileSolidity
+### eth_estimateGas
+### eth_gasPrice
+### eth_getBalance [DIFF]
+### eth_getBlockByHash
+### eth_getBlockByNumber
+### eth_getBlockTransactionCountByHash
+### eth_getBlockTransactionCountByNumber
+### eth_getCode
+### eth_getCompilers
+### eth_getFilterChanges
+### eth_getFilterLogs
+### eth_getLogs
+### eth_getStorageAt
+### eth_getTransactionByBlockHashAndIndex
+### eth_getTransactionByBlockNumberAndIndex
+### eth_getTransactionByHash
+### eth_getTransactionCount
+### eth_getTransactionReceipt
+### eth_hashrate
+### eth_mining
+### eth_newBlockFilter
+### eth_newFilter
+### eth_newPendingTransactionFilter
+### eth_protocolVersion
+### eth_sendRawTransaction
+### eth_sendTransaction
+### eth_sign
+### eth_submitHashrate
+### eth_syncing
+### eth_uninstallFilter
+### eth_signTransaction
+### eth_getProof
+
+
+
+## net module
+
+## web3 module
+
+## 4. Application error codes
+
+## 5. Appendix
+
+### Omitted Modules from Ethereum JSON-RPC 
+
+The following modules exist in Ethereum JSON-RPC, but are **not** in Aion JSON-RPC API:
+
+1. **db** -- Listed as deprecated in Eth spec; can't think of a purposeful use-case for us that requires direct manipulation of the DB through RPC.
+1. **shh** -- Aion does not support Whisper, so don't need RPC methods for it
+
+### 'eth_' methods list explanation
+
+To figure out what eth_ methods should be in spec, I made a list of all eth_ methods in our Java impl, Rust impl, and Eth spec.  The table below shows which method is in which spec/impl and whether it should be in this spec.
+
 <div style="color:red">
 Won't keep this table around in the final version, but putting it here to organize what methods we have so far and what needs to be added/removed.  The information in this table is complete. <br/><br/>
 
@@ -69,9 +154,8 @@ Won't keep this table around in the final version, but putting it here to organi
 </div>
 
 
-
-| method        | aion impl | aionr impl | Eth spec | New spec | Notes |
-|---------------|------|-------|----------|-----------------------|-------|
+| method        | aion impl | aionr impl | Eth spec | Aion spec | Notes |
+|---------------|-----------|------------|----------|-----------|-------|
 |eth_accounts |✓|✓|✓|✓ | | 
 |eth_blockNumber |✓|✓|✓|✓ | | 
 |eth_call |✓|✓|✓|✓ | | 
@@ -128,11 +212,3 @@ Won't keep this table around in the final version, but putting it here to organi
 [2] https://github.com/ethereum/EIPs/issues/1186 
 
 [3] `getblocktemplate` and `submitblock` are names from BTC (https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list).  When Aion RPC server was implemented, we were testing against a BTC miner which expected those names.  
-
-## net module
-
-## web3 module
-
-## 4. Application error codes
-
-## 5. Appendix
