@@ -1,0 +1,29 @@
+						eth module: Eth spec / Java impl 
+
+$ comm -3 eth_java.txt eth_eth.txt
+        eth_compileLLL						// lang not supported - see [1]
+        eth_compileSerpent					// same
+eth_compileSolidityZip						// aion java impl only
+        eth_getProof						// only recently added to eth; probably we should have it to; see [3]
+        eth_getUncleByBlockHashAndIndex		// aion has no 'uncle' - see [1]
+        eth_getUncleByBlockNumberAndIndex   // same 
+        eth_getUncleCountByBlockHash        // same
+        eth_getUncleCountByBlockNumber      // same
+        eth_getWork							// not implemented Java or Rust; see [2]. also [1] claims we have it 
+eth_signTransaction							// we added it so just keep it 
+        eth_submitWork						// exists in Rust. replaced by "submitblock" in java?
+
+[1] https://github.com/aionnetwork/aion/wiki/JSON-RPC-API-Docs#2-ethereum-json-rpc-api-spec-deviations
+[2] eth_getWork - subsumed by getblockheadertemplate.  origin: https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list.  Ross was implementing our rpc server against a miner that he had and it expected getblockheadertemplate.  if people use an eth miner it might assume eth_getWork.  however, no complaints right now, so probably ok to not have eth_getWork.  removing getblockheadertemplate could break people though.
+[3] https://github.com/ethereum/EIPs/issues/1186
+
+						eth module: Rust impl / Java impl 
+
+$ comm -3 eth_java.txt eth_rust.txt
+eth_compileSolidityZip						// leave it out of core spec
+        eth_getWork							// see previous section
+        eth_submitWork						// see previous section
+        eth_subscribe						// not from eth json-rpc spec, but from [4]; omit from core spec
+        eth_unsubscribe						// same
+
+[4] https://wiki.parity.io/JSONRPC-eth_pubsub-module

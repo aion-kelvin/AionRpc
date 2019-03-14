@@ -1,0 +1,4 @@
+convert the table to a list of method names, taking only the ones that belong in new spec:
+
+tail -n+3 table.md | sed 's/|/ /g; s/✓/y/g; s/✗/n/g; s/^ //' | tr -s ' ' | tr ' ' ',' | cut -d',' -f1-5| awk 'BEGIN{FS=","}$5=="y"{print $1}'
+

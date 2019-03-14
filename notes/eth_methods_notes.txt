@@ -1,0 +1,21 @@
+for organizing eth_ methods into table:
+
+(1) in eth, rust, and java
+
+    comm -12 eth/java_rust.txt eth/eth_eth.txt | sed 's/^/|/; s/$/ |✓|✓|✓| |/'
+
+(2) not in eth; in rust and java
+
+    comm -23 eth/java_rust.txt eth/eth_eth.txt | sed 's/^/|/; s/$/ |✓|✓|✗| |/'
+
+(3) in eth; not in rust and java (but maybe in one of them)
+
+    comm -13 eth/java_rust.txt eth/eth_eth.txt | sed 's/^/|/; s/$/ |?|?|✓| |/'
+
+(4) in rust; not in java (need to dedupe from 3)
+
+    comm -13 eth_java.txt eth_rust.txt
+
+(5) not in rust; in java (need to dedupe from 3)
+
+    comm -23 eth_java.txt eth_rust.txt
