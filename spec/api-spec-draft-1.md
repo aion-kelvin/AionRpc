@@ -59,6 +59,11 @@ Non-core:
 
 ## eth module
 
+[PENDING] => waiting for sign-off from chaion
+[EXAMPLE] => example
+[FOLLOWUP] => need more info/analysis
+[OK] => done
+
 ### eth_accounts [EXAMPLE]
 
 Returns a list of addresses owned by kernel.
@@ -69,7 +74,7 @@ None
 
 #### Returns
 
-* `Array` - 64 Bytes - addresses owned by the kernel.
+`Array` - 32 bytes - addresses owned by the kernel.
 
 #### Examples
 
@@ -92,9 +97,138 @@ None
 ### eth_compileSolidity
 ### eth_estimateGas
 ### eth_gasPrice
-### eth_getBalance [DIFF]
+### eth_getBalance [FOLLOWUP - latest/earliest/pending]
+
+Returns the balance of the account of given address.
+
+#### Parameters
+
+1. `DATA`, 32 bytes - adddress to check for balance.
+1. `QUANTITY|TAG` - (optional) integer block number, or the string "latest", "earliest" or "pending", see the default block parameter.
+
+#### Returns
+
+`QUANTITY` - integer of the current balane in nanoAmps (nAmp).
+
+#### Examples
+
+##### Request
+
+        {"method":"eth_getBalance","params":["0xa0f37e8c51b4677a4925f6ba623319ca45262b567e98104af5879b7a88c2f25b"],"id":"1","jsonrpc":"2.0"}
+
+##### Response
+
+        {"result":"0x33f8f8b675f988e5","id":"1","jsonrpc":"2.0"}
+
 ### eth_getBlockByHash
+
+Returns information about a block by hash.
+
+#### Parameters
+
+1. `DATA`, 32 bytes - Hash of a block
+1. `Boolean` - (optional) If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.  If not provided, assumed to be `false`.
+
+#### Returns
+
+`Object` - A block object, or null when no block was found:
+
+  - `number`: `QUANTITY` - the block number. `null` when its pending block.
+  - `hash`: `DATA`, 32 Bytes - hash of the block. `null` when its pending block.
+  - `parentHash`: `DATA`, 32 Bytes - hash of the parent block.
+  - `nonce`: `DATA`, 8 Bytes - hash of the generated proof-of-work. `null` when its pending block.
+  - `logsBloom`: `DATA`, 256 Bytes - the bloom filter for the logs of the block. `null` when its pending block.
+  - `transactionsRoot`: `DATA`, 32 Bytes - the root of the transaction trie of the block.
+  - `stateRoot`: `DATA`, 32 Bytes - the root of the final state trie of the block.
+  - `receiptsRoot`: `DATA`, 32 Bytes - the root of the receipts trie of the block.
+  - `miner`: `DATA`, 20 Bytes - the address of the beneficiary to whom the mining rewards were given.
+  - `difficulty`: `QUANTITY` - integer of the difficulty for this block.
+  - `totalDifficulty`: `QUANTITY` - integer of the total difficulty of the chain until this block.
+  - `extraData`: `DATA` - the "extra data" field of this block.
+  - `size`: `QUANTITY` - integer the size of this block in bytes.
+  - `nrgLimit`: `QUANTITY` - the maximum energy allowed in this block in nAmps.
+  - `nrgUsed`: `QUANTITY` - the total used energy by all transactions in this block in nAmps.
+  - `gasLimit`: `QUANTITY` - same as `nrgLimit`; duplicated for Ethereum-compatibility purposes.
+  - `gasUsed`: `QUANTITY` - same as `nrgUsed`; duplicated for Ethereum-compatibility purposes.
+  - `timestamp`: `QUANTITY` - the unix timestamp for when the block was collated, in seconds.
+  - `transactions`: `Array` - Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
+  - `solution`: `DATA`, 1408 bytes - solution for the generated proof-of-work.
+
+#### Examples
+
+##### Request
+
+        {"method":"eth_getBlockByHash","params":["0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52", true],"id":"1","jsonrpc":"2.0"}
+        
+##### Response
+
+
+        {
+          "result": {
+            "number": "0x28cce9",
+            "hash": "0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52",
+            "parentHash": "0xc1e7987aedf107c81b663ce7d092251dddca6c5e2c37e07e2d937b7db0cc6108",
+            "nonce": "0x000000000000000000000000c001b43b00000000000000006437700000000000",
+            "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000001000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000440000000000000000000000000000000000000000000000000000000000000001000000000000000",
+            "transactionsRoot": "0xcf105253fc2f325a908abd66cfb200f3dfb58f401c58751e64186af97d5202ac",
+            "stateRoot": "0x1dd00fa0fd6b1635e54dbee33d5ce19454bfb948d5027f5a989dfb4cd46fee99",
+            "receiptsRoot": "0x9417d2515d3656d3aaf316506bf8afcb740759de5d23cd6538ba8269486d88aa",
+            "miner": "0xa08091ab0325e384ac45e560d2f85e4b741363aa98881d52d54233a02b33fcaa",
+            "difficulty": "0x8a4214",
+            "totalDifficulty": "0x1d598faf9420",
+            "extraData": "0x4c55584f52000000000000000000000000000000000000000000000000000000",
+            "size": "0x84a",
+            "nrgLimit": "0xe4b058",
+            "nrgUsed": "0x7c1e",
+            "gasLimit": "0xe4b058",
+            "gasUsed": "0x7c1e",
+            "timestamp": "0x5c8c04f9"
+            "transactions": [
+              { //TODO: should i truncate this? also, some of these are wrong
+                "nrgPrice": "0x4a817c800",
+                "nrg": 31774,
+                "transactionIndex": 0,
+                "nonce": 3771,
+                "input": "0x4178462f00000000000000000000000000000021",
+                "blockNumber": 2673897,
+                "gas": 31774,
+                "from": "0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63",
+                "to": "0xa03cc62caf592513a6e0626c0d7631c66ea2430c15a18dc43a51a65dcb359da0",
+                "value": "0x",
+                "hash": "0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831",
+                "gasPrice": "0x4a817c800",
+                "timestamp": 1552680185 // TODO wrong timestamp
+              }
+            ],
+            "solution": "0x006521b29b... ", /* truncated for readability */
+          },
+          "id": "1",
+          "jsonrpc": "2.0"
+        }
+
 ### eth_getBlockByNumber
+
+Returns information about a block by block number.
+
+#### Parameters
+
+1. `QUANTITY|TAG`, integer of a block number, or the string "earliest", "latest" or "pending", as in the default block parameter. //TODO formatting
+1. `Boolean` - (optional) If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.  If not provided, assumed to be `false`.
+
+#### Returns
+
+See eth_getBlockByHash //TODO formatting
+
+#### Examples
+
+##### Request
+
+        {"method":"eth_getBlockByNumber","params":["0x28cce9", "false"],"id":"1","jsonrpc":"2.0"}
+        
+##### Response
+
+See eth_getBlockByHash //TODO formatting
+
 ### eth_getBlockTransactionCountByHash
 ### eth_getBlockTransactionCountByNumber
 ### eth_getCode
@@ -104,8 +238,110 @@ None
 ### eth_getLogs
 ### eth_getStorageAt
 ### eth_getTransactionByBlockHashAndIndex
-### eth_getTransactionByBlockNumberAndIndex
+
+Returns information about a transaction by block hash and transaction index position.
+
+#### Parameters
+
+
+1. `DATA`, 32 Bytes - hash of a block.
+2. `QUANTITY` - integer of the transaction index position.
+
+#### Returns
+
+See [eth_getTransactionByHash](#eth_gettransactionbyhash)
+
+#### Examples
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getTransactionByBlockHashAndIndex","params":["0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465", "0x6"],"id":1}
+
+##### Response
+
+see [eth_getTransactionByHash](#eth_gettransactionbyhash)
+
+### eth_getTransactionByBlockNumberAndIndex [JAVA]
+
+Returns information about a transaction by block number and transaction index position.
+
+#### Parameters
+
+
+1. `DATA`, 32 Bytes - hash of a block.
+2. `QUANTITY` - integer of the transaction index position.
+
+#### Returns
+
+See [eth_getTransactionByHash](#eth_gettransactionbyhash)
+
+#### Examples
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getTransactionByBlockNumberAndIndex","params":["0x6d39e", "0x6"],"id":1}
+
+##### Response
+
+see [eth_getTransactionByHash](#eth_gettransactionbyhash)
+
 ### eth_getTransactionByHash
+
+Returns the information about a transaction requested by transaction hash.
+
+#### Parameters
+
+1. `DATA` - 32 bytes - hash of a transaction
+
+
+#### Returns
+
+`Object` - A transaction object, or `null` when no transaction was found:
+
+  - `blockHash`: `DATA`, 32 Bytes - hash of the block where this transaction was in. `null` when its pending.
+  - `blockNumber`: `QUANTITY` - block number where this transaction was in. `null` when its pending.
+  - `from`: `DATA`, 32 Bytes - address of the sender.
+  - `nrg`: `QUANTITY` - energy provided by the sender.
+  - `nrgPrice`: `QUANTITY` - energy price provided by the sender in nAmps.
+  - `gas`: `QUANTITY` - same as `nrg`; duplicated for Ethereum-compatibility purposes.
+  - `gasPrice`: `QUANTITY` - same as `nrgPrice`; duplicated for Ethereum-compatibility purposes.
+  - `hash`: `DATA`, 32 Bytes - hash of the transaction.
+  - `input`: `DATA` - the data of the transaction.
+  - `nonce`: `QUANTITY` - the number of transactions made by the sender prior to this one.
+  - `to`: `DATA`, 32 Bytes - address of the receiver. `null` when its a contract creation transaction.
+  - `transactionIndex`: `QUANTITY` - integer of the transaction's index position in the block. `null` when its pending.
+  - `value`: `QUANTITY` - value transferred in nAmps.
+  - `timestamp`: `QUANTITY` - the unix timestamp for when the transaction was sent, in seconds.
+
+#### Examples
+
+##### Request
+
+        curl -s -X POST -H"Content-type: application/json"  --data '{"method":"eth_getTransactionByHash","params":["0xfafcae97932003ef1b6a896d51c47b2abb88d97339861dc803d21424dfe0402b"],"id":"1","jsonrpc":"2.0"}' http://localhost:6545
+
+##### Response
+
+        {   
+          "result": {
+            "blockHash": "0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465",
+            "blockNumber": "0x6d39e",
+            "from": "0xa06e78398580c0f37add71f2b8914bcef5be4938b05e024b96da75438d074ef0",
+            "nrg": "0x7a120",
+            "nrgPrice": "0x2540be400",
+            "gas": "0x7a120",
+            "gasPrice": "0x2540be400",
+            "hash": "0xfafcae97932003ef1b6a896d51c47b2abb88d97339861dc803d21424dfe0402b",
+            "input": "0x",
+            "nonce": "1c2b",
+            "to": "0xa0a7168688acbd3cf4f44525d689f4d918743290c99f4b2b5c1119bfd41ac98b",
+            "transactionIndex": "0x6",
+            "value": "0xd4e0885c33cf3a",
+            "timestamp": "0x5b2634f8"
+          },  
+          "id": "1",
+          "jsonrpc": "2.0"
+        }
+
 ### eth_getTransactionCount
 ### eth_getTransactionReceipt
 ### eth_hashrate
