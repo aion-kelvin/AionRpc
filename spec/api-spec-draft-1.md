@@ -136,12 +136,12 @@ Returns information about a block by hash.
   - `number`: `QUANTITY` - the block number. `null` when its pending block.
   - `hash`: `DATA`, 32 Bytes - hash of the block. `null` when its pending block.
   - `parentHash`: `DATA`, 32 Bytes - hash of the parent block.
-  - `nonce`: `DATA`, 8 Bytes - hash of the generated proof-of-work. `null` when its pending block.
+  - `nonce`: `DATA`, 32 Bytes - nonce of the generated proof-of-work. `null` when its pending block.
   - `logsBloom`: `DATA`, 256 Bytes - the bloom filter for the logs of the block. `null` when its pending block.
   - `transactionsRoot`: `DATA`, 32 Bytes - the root of the transaction trie of the block.
   - `stateRoot`: `DATA`, 32 Bytes - the root of the final state trie of the block.
   - `receiptsRoot`: `DATA`, 32 Bytes - the root of the receipts trie of the block.
-  - `miner`: `DATA`, 20 Bytes - the address of the beneficiary to whom the mining rewards were given.
+  - `miner`: `DATA`, 32 Bytes - the address of the beneficiary to whom the mining rewards were given.
   - `difficulty`: `QUANTITY` - integer of the difficulty for this block.
   - `totalDifficulty`: `QUANTITY` - integer of the total difficulty of the chain until this block.
   - `extraData`: `DATA` - the "extra data" field of this block.
@@ -332,7 +332,7 @@ Returns the information about a transaction requested by transaction hash.
             "gasPrice": "0x2540be400",
             "hash": "0xfafcae97932003ef1b6a896d51c47b2abb88d97339861dc803d21424dfe0402b",
             "input": "0x",
-            "nonce": "1c2b",
+            "nonce": "0x1c2b",
             "to": "0xa0a7168688acbd3cf4f44525d689f4d918743290c99f4b2b5c1119bfd41ac98b",
             "transactionIndex": "0x6",
             "value": "0xd4e0885c33cf3a",
