@@ -91,12 +91,33 @@ None
         }
 
 
+
+***
+
 ### eth_blockNumber
+
+***
+
 ### eth_call
+
+***
+
 ### eth_coinbase
+
+***
+
 ### eth_compileSolidity
+
+***
+
 ### eth_estimateGas
+
+***
+
 ### eth_gasPrice
+
+***
+
 ### eth_getBalance [FOLLOWUP - latest/earliest/pending]
 
 Returns the balance of the account of given address.
@@ -119,6 +140,9 @@ Returns the balance of the account of given address.
 ##### Response
 
         {"result":"0x33f8f8b675f988e5","id":"1","jsonrpc":"2.0"}
+
+
+***
 
 ### eth_getBlockByHash
 
@@ -206,6 +230,9 @@ Returns information about a block by hash.
           "jsonrpc": "2.0"
         }
 
+
+***
+
 ### eth_getBlockByNumber
 
 Returns information about a block by block number.
@@ -229,14 +256,41 @@ See eth_getBlockByHash //TODO formatting
 
 See eth_getBlockByHash //TODO formatting
 
+
+***
+
 ### eth_getBlockTransactionCountByHash
+
+***
+
 ### eth_getBlockTransactionCountByNumber
+
+***
+
 ### eth_getCode
+
+***
+
 ### eth_getCompilers
+
+***
+
 ### eth_getFilterChanges
+
+***
+
 ### eth_getFilterLogs
+
+***
+
 ### eth_getLogs
+
+***
+
 ### eth_getStorageAt
+
+***
+
 ### eth_getTransactionByBlockHashAndIndex
 
 Returns information about a transaction by block hash and transaction index position.
@@ -261,6 +315,9 @@ See [eth_getTransactionByHash](#eth_gettransactionbyhash)
 
 see [eth_getTransactionByHash](#eth_gettransactionbyhash)
 
+
+***
+
 ### eth_getTransactionByBlockNumberAndIndex [JAVA]
 
 Returns information about a transaction by block number and transaction index position.
@@ -284,6 +341,9 @@ See [eth_getTransactionByHash](#eth_gettransactionbyhash)
 ##### Response
 
 see [eth_getTransactionByHash](#eth_gettransactionbyhash)
+
+
+***
 
 ### eth_getTransactionByHash
 
@@ -342,24 +402,72 @@ Returns the information about a transaction requested by transaction hash.
           "jsonrpc": "2.0"
         }
 
+
+***
+
 ### eth_getTransactionCount
+
+***
+
 ### eth_getTransactionReceipt
+
+***
+
 ### eth_hashrate
+
+***
+
 ### eth_mining
+
+***
+
 ### eth_newBlockFilter
+
+***
+
 ### eth_newFilter
+
+***
+
 ### eth_newPendingTransactionFilter
+
+***
+
 ### eth_protocolVersion
+
+***
+
 ### eth_sendRawTransaction
+
+***
+
 ### eth_sendTransaction
+
+***
+
 ### eth_sign
+
+***
+
 ### eth_submitHashrate
+
+***
+
 ### eth_syncing
+
+***
+
 ### eth_uninstallFilter
+
+***
+
 ### eth_signTransaction
+
+***
+
 ### eth_getProof
 
-
+***
 
 ## net module
 
