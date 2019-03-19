@@ -353,7 +353,6 @@ Returns the information about a transaction requested by transaction hash.
 
 1. `DATA` - 32 bytes - hash of a transaction
 
-
 #### Returns
 
 `Object` - A transaction object, or `null` when no transaction was found:
@@ -405,11 +404,113 @@ Returns the information about a transaction requested by transaction hash.
 
 ***
 
-### eth_getTransactionCount
+### eth_getTransactionCount [FOLLOWUP - latest/earliest/pending]
+
+Returns the number of transactions *sent* from an address.
+
+##### Parameters
+
+1. `DATA`, 32 Bytes - address.
+2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter)
+
+##### Returns
+
+`QUANTITY` - integer of the number of transactions send from this address.
+
+##### Example
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getTransactionCount","params":["0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63","latest"],"id":1}
+
+##### Response
+
+        {
+          "result": "0xf76",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
 ### eth_getTransactionReceipt
+
+Returns the receipt of a transaction by transaction hash.
+
+**Note** That the receipt is not available for pending transactions.
+
+##### Parameters
+
+1. `DATA`, 32 Bytes - hash of a transaction
+
+##### Returns
+
+`Object` - A transaction receipt object, or `null` when no receipt was found:
+
+  - `transactionHash `: `DATA`, 32 Bytes - hash of the transaction.
+  - `transactionIndex`: `QUANTITY` - integer of the transaction's index position in the block.
+  - `blockHash`: `DATA`, 32 Bytes - hash of the block where this transaction was in.
+  - `blockNumber`: `QUANTITY` - block number where this transaction was in.
+  - `from`: `DATA`, 32 Bytes - address of the sender.
+  - `to`: `DATA`, 32 Bytes - address of the receiver. null when it's a contract creation transaction.
+  - `cumulativeNrgUsed `: `QUANTITY ` - The total amount of energy used when this transaction was executed in the block.
+  - `cumulativeGasUsed `: `QUANTITY ` - same as `cumulativeNrgUsed`; duplicated for Ethereum-compatibility purposes.
+  - `nrgUsed `: `QUANTITY ` - The amount of energy used by this specific transaction alone.
+  - `gasUsed `: `QUANTITY ` - same as `nrgUsed`; duplicated for Ethereum-compatibility purposes.
+  - `nrgLimit `: `QUANTITY ` - The energy limit for the transaction
+  - `gasLimit `: `QUANTITY ` - same as `nrgLimit`; duplicated for Ethereum-compatibility purposes.
+  - 
+  - `contractAddress `: `DATA`, 20 Bytes - The contract address created, if the transaction was a contract creation, otherwise `null`.
+  - `logs`: `Array` - Array of log objects, which this transaction generated.
+  - `logsBloom`: `DATA`, 256 Bytes - Bloom filter for light clients to quickly retrieve related logs.  
+  - `root` : `DATA` 32 bytes of post-transaction stateroot if it was successful //TODO check against impls
+  - `status`: `QUANTITY` either `1` (success) or `0` (failure) 
+
+##### Example
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params":["0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831"],"id":1}
+
+##### Response
+
+        {
+          "result": {
+            "transactionHash": "0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831",
+            "transactionIndex": "0x0",
+            "blockHash": "0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52",
+            "blockNumber": "0x28cce9",
+            "from": "0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63",
+            "to": "0xa03cc62caf592513a6e0626c0d7631c66ea2430c15a18dc43a51a65dcb359da0",
+            "cumulativeNrgUsed": "0x7c1e",
+            "cumulativeGasUsed": "0x7c1e",
+            "nrgUsed": "0x7c1e",
+            "gasUsed": "0x7c1e",
+            "nrgPrice": "0x04a817c800",
+            "gasPrice": "0x04a817c800",
+            "nrgLimit": "0x7c1e",
+            "gasLimit": "0x7c1e",
+            "contractAddress": null,
+            "logs": [
+              {   
+                "address": "0xa03cc62caf592513a6e0626c0d7631c66ea2430c15a18dc43a51a65dcb359da0",
+                "logIndex": "0x0",
+                "data": "0x00000000000000000000000000000021",
+                "topics": [
+                  "0x8d58ad5a07d0080c710a21010568c7fd3ccbefcb02a313581024843b98e03513"
+                ],  
+                "blockNumber": "0x28cce9",
+                "transactionIndex": "0x0"
+              }   
+            ],  
+            "logsBloom": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000001000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000440000000000000000000000000000000000000000000000000000000000000001000000000000000",            
+            "root": "9417d2515d3656d3aaf316506bf8afcb740759de5d23cd6538ba8269486d88aa",
+            "status": "0x1"
+          },  
+          
+          "id": 1,
+          "jsonrpc": "2.0"
+        }   
 
 ***
 
@@ -556,3 +657,10 @@ Won't keep this table around in the final version, but putting it here to organi
 [2] https://github.com/ethereum/EIPs/issues/1186 
 
 [3] `getblocktemplate` and `submitblock` are names from BTC (https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list).  When Aion RPC server was implemented, we were testing against a BTC miner which expected those names.  
+
+### Spec TODOs
+
+- use consistent format for examples
+- "latest" "earliest" "pending" -- are they actually implemented in the places where they should be?  does it work for all methods where they're supposed to work?  also need to add a section explaining it in this spec
+- getCode - AVM result?
+- sanitize examples
