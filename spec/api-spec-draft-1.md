@@ -408,16 +408,16 @@ Returns the information about a transaction requested by transaction hash.
 
 Returns the number of transactions *sent* from an address.
 
-##### Parameters
+#### Parameters
 
 1. `DATA`, 32 Bytes - address.
 2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter)
 
-##### Returns
+#### Returns
 
 `QUANTITY` - integer of the number of transactions send from this address.
 
-##### Example
+#### Example
 
 ##### Request
 
@@ -439,11 +439,11 @@ Returns the receipt of a transaction by transaction hash.
 
 **Note** That the receipt is not available for pending transactions.
 
-##### Parameters
+#### Parameters
 
 1. `DATA`, 32 Bytes - hash of a transaction
 
-##### Returns
+#### Returns
 
 `Object` - A transaction receipt object, or `null` when no receipt was found:
 
@@ -466,7 +466,7 @@ Returns the receipt of a transaction by transaction hash.
   - `root` : `DATA` 32 bytes of post-transaction stateroot if it was successful //TODO check against impls
   - `status`: `QUANTITY` either `1` (success) or `0` (failure) 
 
-##### Example
+#### Example
 
 ##### Request
 
@@ -516,9 +516,48 @@ Returns the receipt of a transaction by transaction hash.
 
 ### eth_hashrate
 
+Returns the number of hashes per second that the node is mining with.
+
+#### Parameters
+none
+
+#### Returns
+
+`QUANTITY` - number of hashes per second.
+
+#### Example
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_hashrate","params":[],"id":1}
+
+##### Response
+
+        { "id":1, "jsonrpc": "2.0", "result": "0x38a" }
+
 ***
 
 ### eth_mining
+
+
+Returns `true` if node is actively mining new blocks.
+
+##### Parameters
+none
+
+##### Returns
+
+`Boolean` - returns `true` of the client is mining, otherwise `false`.
+
+#### Example
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_mining","params":[],"id":1}
+
+##### Response
+
+        { "id":1, "jsonrpc": "2.0", "result": false }
 
 ***
 
