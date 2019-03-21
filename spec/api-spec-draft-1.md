@@ -78,11 +78,11 @@ none
 
 #### Example
 
-# Request
+##### Request
 
         '{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}'
 
-# Response
+##### Response
 
         {
           "result": [
@@ -262,6 +262,40 @@ Returns compiled solidity code.
 
 ### eth_estimateGas
 
+Generates and returns an estimate of how much energy is necessary to allow the transaction to complete. The transaction will not be added to the blockchain. Note that the estimate may be significantly more than the amount of energy actually used by the transaction, for a variety of reasons including VM mechanics and node performance.
+
+#### Parameters
+
+See [eth_call](#eth_call) parameters, expect that all properties are optional. If no gas limit is specified geth uses the block gas limit from the pending block as an upper bound. As a result the returned estimate might not be enough to executed the call/transaction when the amount of gas is higher than the pending block gas limit.
+
+#### Returns
+
+`QUANTITY` - the amount of gas used.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_estimateGas",
+          "params": [
+            {
+              "to": "0xa03684c89bce58a355041ca0f0da8096fd9f38df0109d2003a646f822d25a03f",
+              "data": "0xa87d942c"
+            }
+          ],
+          "id": 1
+        }
+
+#### Response
+
+        {
+          "result": "0x572e",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_gasPrice
@@ -427,22 +461,134 @@ See eth_getBlockByHash //TODO formatting
 
 See eth_getBlockByHash //TODO formatting
 
-
 ***
 
 ### eth_getBlockTransactionCountByHash
+
+Returns the number of transactions in a block from a block matching the given block hash.
+
+
+#### Parameters
+
+1. `DATA`, 32 Bytes - hash of a block.
+
+#### Returns
+
+`QUANTITY` - integer of the number of transactions in this block.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_getBlockTransactionCountByHash",
+          "params": [
+            "0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465"
+          ]
+        }
+
+##### Response
+
+        {
+          "id":1,
+          "jsonrpc": "2.0",
+          "result": "0xc"
+        }
 
 ***
 
 ### eth_getBlockTransactionCountByNumber
 
+Returns the number of transactions in a block matching the given block number.
+
+#### Parameters
+
+1. `QUANTITY|TAG` - integer of a block number, or the string `"earliest"`, `"latest"` or `"pending"`, as in the [default block parameter](#the-default-block-parameter). //TODO
+
+#### Returns
+
+`QUANTITY` - integer of the number of transactions in this block.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_getBlockTransactionCountByNumber",
+          "params": [
+            "0x6d39e"
+          ]
+        }
+
+##### Response
+
+        {
+          "id":1,
+          "jsonrpc": "2.0",
+          "result": "0xc"
+        }
+
 ***
 
 ### eth_getCode
 
+Returns code at a given address.
+
+
+#### Parameters
+
+1. `DATA`, 32 bytes - address.
+2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter). //TODO
+
+#### Returns
+
+`DATA` - the code from the given address.
+
+#### Examples
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getCode","params":["0xa03684c89bce58a355041ca0f0da8096fd9f38df0109d2003a646f822d25a03f", "latest"],"id":1}
+
+##### Response
+
+        {
+          "result": "0x60506040526000356c..." /* result truncated for readability */,
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_getCompilers
+
+Returns a list of available compilers in the client.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`Array` - Array of available compilers.
+
+#### Examples
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getCompilers","params":[],"id":1}
+
+##### Response
+
+        {
+          "result": [
+            "solidity"
+          ],
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
