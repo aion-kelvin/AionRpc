@@ -24,7 +24,7 @@ At present there are two key datatypes that are passed over JSON (except for `et
 
 When encoding **QUANTITIES** (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0"). Examples:
 
-- 0x41 (65 in decimal) 
+- 0x41 (65 in decimal)
 - 0x400 (1024 in decimal)
 - WRONG: 0x (should always have at least one digit - zero is "0x0")
 - WRONG: 0x0400 (no leading zeroes allowed)
@@ -44,9 +44,9 @@ The methods for Aion JSON-RPC API are organized into *API modules*:
 
 Core:
 
-- eth: 
-- net: 
-- web3: 
+- eth:
+- net:
+- web3:
 
 Non-core:
 
@@ -64,49 +64,199 @@ Non-core:
 [FOLLOWUP] => need more info/analysis
 [OK] => done
 
-### eth_accounts [EXAMPLE]
+### eth_accounts
 
 Returns a list of addresses owned by kernel.
 
 #### Parameters
 
-None
+none
 
 #### Returns
 
-`Array` - 32 bytes - addresses owned by the kernel.
+`Array of DATA`, 32 Bytes - addresses owned by the kernel.
 
-#### Examples
+#### Example
 
-##### Request
+# Request
 
-        curl --data '{"method":"TODO","params":["TODO"],"id":"TODO","jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+        '{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}'
 
-##### Response
+# Response
 
         {
+          "result": [
+            "0xa04432c1b17b4094b0b0da92347dbe3c4c3a972530d9de99e2fd18b05d706a01",
+            "0xa0bac18b812332acfd9b25dd489cf82115c3abbae2934cbf1a70a6896755ec54"
+          ],
           "id": 1,
-          "jsonrpc": "2.0",
-          "result": ["TODO"]
+          "jsonrpc": "2.0"
         }
-
-
 
 ***
 
 ### eth_blockNumber
 
+Returns the number of most recent block.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`QUANTITY` - integer of the current block number the client is on.
+
+#### Example
+
+##### Request
+
+        '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+
+#### Response
+
+        {
+          "result": 2714561,
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_call
+
+Executes a new message call immediately without creating a transaction on the block chain.
+
+#### Parameters
+
+1. `Object` - The transaction call object
+  - `from`: `DATA`, 32 Bytes - (optional) The address the transaction is sent from.
+  - `to`: `DATA`, 32 Bytes  - The address the transaction is directed to.
+  - `gas`: `QUANTITY`  - (optional) Integer of the energy provided for the transaction execution. eth_call consumes zero energy, but this parameter may be needed by some executions.
+  - `gasPrice`: `QUANTITY`  - (optional) Integer of the gasPrice used for each paid energy
+  - `value`: `QUANTITY`  - (optional) Integer of the value sent with this transaction
+  - `data`: `DATA`  - (optional) Hash of the method signature and encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) //TODO
+2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter) //TODO
+
+#### Returns
+
+`DATA` - the return value of executed contract.
+
+#### Example
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_call",
+          "params": [
+            {
+              "from": "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f",
+              "to": "0xa03684c89bce58a355041ca0f0da8096fd9f38df0109d2003a646f822d25a03f",
+              "gas": "0xd431",
+              "data": "0xa87d942c"
+            }
+          ],
+          "id": 1
+        }
+
+#### Response
+
+        {
+          "result": "0x000000000000000000000000000000fe",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
 ### eth_coinbase
 
+Returns the client coinbase address.
+
+#### Parameters
+none
+
+#### Returns
+
+`DATA`, 32 bytes - the current coinbase address.
+
+#### Example
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_coinbase",
+          "params": [],
+          "id": 1
+        }
+#### Response
+
+        {
+          "result": "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_compileSolidity
+
+Returns compiled solidity code.
+
+##### Parameters
+
+1. `String` - The source code.
+
+#### Returns
+
+`DATA` - The compiled source code.
+
+#### Example
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_compileSolidity",
+          "params": ["contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }"],
+          "id": 1
+        }
+#### Response
+
+        {
+          "result": {
+            "test": {
+              "code": "0x605060405234156100105760006000fd5b610015565b60a3806100236000396000f30060506040526000356c01000000000000000000000000900463ffffffff16806390a1703f14603157602b565b60006000fd5b3415603c5760006000fd5b605060048080359060100190919050506066565b6040518082815260100191505060405180910390f35b60006007820290506072565b9190505600a165627a7a72305820a1f5bcb63660014f2677e1b038aba97bb1e515e52f77923115e4b5a11c1c24d80029",
+              "info": {
+                "abiDefinition": [
+                  {
+                    "outputs": [
+                      {
+                        "name": "d",
+                        "type": "uint128"
+                      }
+                    ],
+                    "constant": false,
+                    "payable": false,
+                    "inputs": [
+                      {
+                        "name": "a",
+                        "type": "uint128"
+                      }
+                    ],
+                    "name": "multiply",
+                    "type": "function"
+                  }
+                ],
+                "languageVersion": "0",
+                "language": "Solidity",
+                "compilerVersion": "0.4.15+commit.ecf81ee5.Linux.g++",
+                "source": "contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }"
+              }
+            }
+          },
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
@@ -116,7 +266,28 @@ None
 
 ### eth_gasPrice
 
-***
+Returns the current price per gas in nAmps.
+
+##### Parameters
+none
+
+##### Returns
+
+`QUANTITY` - integer of the current gas price in nAmps.
+
+#### Examples
+
+##### Request
+
+        {"method":"eth_gasPrice","params":[],"id":"1","jsonrpc":"2.0"}
+
+##### Response
+
+        {
+          "result": "0x2540be400",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ### eth_getBalance [FOLLOWUP - latest/earliest/pending]
 
@@ -183,7 +354,7 @@ Returns information about a block by hash.
 ##### Request
 
         {"method":"eth_getBlockByHash","params":["0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52", true],"id":"1","jsonrpc":"2.0"}
-        
+
 ##### Response
 
 
@@ -251,7 +422,7 @@ See eth_getBlockByHash //TODO formatting
 ##### Request
 
         {"method":"eth_getBlockByNumber","params":["0x28cce9", "false"],"id":"1","jsonrpc":"2.0"}
-        
+
 ##### Response
 
 See eth_getBlockByHash //TODO formatting
@@ -459,12 +630,12 @@ Returns the receipt of a transaction by transaction hash.
   - `gasUsed `: `QUANTITY ` - same as `nrgUsed`; duplicated for Ethereum-compatibility purposes.
   - `nrgLimit `: `QUANTITY ` - The energy limit for the transaction
   - `gasLimit `: `QUANTITY ` - same as `nrgLimit`; duplicated for Ethereum-compatibility purposes.
-  - 
+  -
   - `contractAddress `: `DATA`, 20 Bytes - The contract address created, if the transaction was a contract creation, otherwise `null`.
   - `logs`: `Array` - Array of log objects, which this transaction generated.
   - `logsBloom`: `DATA`, 256 Bytes - Bloom filter for light clients to quickly retrieve related logs.  
   - `root` : `DATA` 32 bytes of post-transaction stateroot if it was successful //TODO check against impls
-  - `status`: `QUANTITY` either `1` (success) or `0` (failure) 
+  - `status`: `QUANTITY` either `1` (success) or `0` (failure)
 
 #### Example
 
@@ -507,7 +678,7 @@ Returns the receipt of a transaction by transaction hash.
             "root": "9417d2515d3656d3aaf316506bf8afcb740759de5d23cd6538ba8269486d88aa",
             "status": "0x1"
           },  
-          
+
           "id": 1,
           "jsonrpc": "2.0"
         }   
@@ -617,7 +788,7 @@ none
 
 ## 5. Appendix
 
-### Omitted Modules from Ethereum JSON-RPC 
+### Omitted Modules from Ethereum JSON-RPC
 
 The following modules exist in Ethereum JSON-RPC, but are **not** in Aion JSON-RPC API:
 
@@ -640,49 +811,49 @@ Won't keep this table around in the final version, but putting it here to organi
 
 | method        | aion impl | aionr impl | Eth spec | Aion spec | Notes |
 |---------------|-----------|------------|----------|-----------|-------|
-|eth_accounts |✓|✓|✓|✓ | | 
-|eth_blockNumber |✓|✓|✓|✓ | | 
-|eth_call |✓|✓|✓|✓ | | 
-|eth_coinbase |✓|✓|✓|✓ | | 
-|eth_compileSolidity |✓|✓|✓|✓ | | 
-|eth_estimateGas |✓|✓|✓|✓ | | 
-|eth_gasPrice |✓|✓|✓|✓ | | 
-|eth_getBalance |✓|✓|✓|✓ | | 
-|eth_getBlockByHash |✓|✓|✓|✓ | | 
-|eth_getBlockByNumber |✓|✓|✓|✓ | | 
-|eth_getBlockTransactionCountByHash |✓|✓|✓|✓ | | 
-|eth_getBlockTransactionCountByNumber |✓|✓|✓|✓ | | 
-|eth_getCode |✓|✓|✓|✓ | | 
-|eth_getCompilers |✓|✓|✓|✓ | | 
-|eth_getFilterChanges |✓|✓|✓|✓ | | 
-|eth_getFilterLogs |✓|✓|✓|✓ | | 
-|eth_getLogs |✓|✓|✓|✓ | | 
-|eth_getStorageAt |✓|✓|✓|✓ | | 
-|eth_getTransactionByBlockHashAndIndex |✓|✓|✓|✓ | | 
-|eth_getTransactionByBlockNumberAndIndex |✓|✓|✓|✓ | | 
-|eth_getTransactionByHash |✓|✓|✓|✓ | | 
-|eth_getTransactionCount |✓|✓|✓|✓ | | 
-|eth_getTransactionReceipt |✓|✓|✓|✓ | | 
-|eth_hashrate |✓|✓|✓|✓ | | 
-|eth_mining |✓|✓|✓|✓ | | 
-|eth_newBlockFilter |✓|✓|✓|✓ | | 
-|eth_newFilter |✓|✓|✓|✓ | | 
-|eth_newPendingTransactionFilter |✓|✓|✓|✓ | | 
-|eth_protocolVersion |✓|✓|✓|✓ | | 
-|eth_sendRawTransaction |✓|✓|✓|✓ | | 
-|eth_sendTransaction |✓|✓|✓|✓ | | 
-|eth_sign |✓|✓|✓|✓ | | 
-|eth_submitHashrate |✓|✓|✓|✓ | | 
-|eth_syncing |✓|✓|✓|✓ | | 
-|eth_uninstallFilter |✓|✓|✓|✓ | | 
-|eth_signTransaction |✓|✓|✗|✓ | Introduced in Aion; never existed in Eth | 
-|eth_compileLLL |✗|✗|✓|✗ |LLL not supported by Aion; see [1] | 
-|eth_compileSerpent |✗|✗|✓|✗ |Serpent not supported by Aion; see [1] | 
+|eth_accounts |✓|✓|✓|✓ | |
+|eth_blockNumber |✓|✓|✓|✓ | |
+|eth_call |✓|✓|✓|✓ | |
+|eth_coinbase |✓|✓|✓|✓ | |
+|eth_compileSolidity |✓|✓|✓|✓ | |
+|eth_estimateGas |✓|✓|✓|✓ | |
+|eth_gasPrice |✓|✓|✓|✓ | |
+|eth_getBalance |✓|✓|✓|✓ | |
+|eth_getBlockByHash |✓|✓|✓|✓ | |
+|eth_getBlockByNumber |✓|✓|✓|✓ | |
+|eth_getBlockTransactionCountByHash |✓|✓|✓|✓ | |
+|eth_getBlockTransactionCountByNumber |✓|✓|✓|✓ | |
+|eth_getCode |✓|✓|✓|✓ | |
+|eth_getCompilers |✓|✓|✓|✓ | |
+|eth_getFilterChanges |✓|✓|✓|✓ | |
+|eth_getFilterLogs |✓|✓|✓|✓ | |
+|eth_getLogs |✓|✓|✓|✓ | |
+|eth_getStorageAt |✓|✓|✓|✓ | |
+|eth_getTransactionByBlockHashAndIndex |✓|✓|✓|✓ | |
+|eth_getTransactionByBlockNumberAndIndex |✓|✓|✓|✓ | |
+|eth_getTransactionByHash |✓|✓|✓|✓ | |
+|eth_getTransactionCount |✓|✓|✓|✓ | |
+|eth_getTransactionReceipt |✓|✓|✓|✓ | |
+|eth_hashrate |✓|✓|✓|✓ | |
+|eth_mining |✓|✓|✓|✓ | |
+|eth_newBlockFilter |✓|✓|✓|✓ | |
+|eth_newFilter |✓|✓|✓|✓ | |
+|eth_newPendingTransactionFilter |✓|✓|✓|✓ | |
+|eth_protocolVersion |✓|✓|✓|✓ | |
+|eth_sendRawTransaction |✓|✓|✓|✓ | |
+|eth_sendTransaction |✓|✓|✓|✓ | |
+|eth_sign |✓|✓|✓|✓ | |
+|eth_submitHashrate |✓|✓|✓|✓ | |
+|eth_syncing |✓|✓|✓|✓ | |
+|eth_uninstallFilter |✓|✓|✓|✓ | |
+|eth_signTransaction |✓|✓|✗|✓ | Introduced in Aion; never existed in Eth |
+|eth_compileLLL |✗|✗|✓|✗ |LLL not supported by Aion; see [1] |
+|eth_compileSerpent |✗|✗|✓|✗ |Serpent not supported by Aion; see [1] |
 |eth_getProof |✗|✗|✓|✓| Was recently added to Eth (see [2]); we should add it too <span style="color:red">[@chAion]</span>
-|eth_getUncleByBlockHashAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] | 
-|eth_getUncleByBlockNumberAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] | 
-|eth_getUncleCountByBlockHash |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] | 
-|eth_getUncleCountByBlockNumber |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] | 
+|eth_getUncleByBlockHashAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
+|eth_getUncleByBlockNumberAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
+|eth_getUncleCountByBlockHash |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
+|eth_getUncleCountByBlockNumber |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
 |eth_getWork |✗|✓|✓|✗| In aion, fulfilled by getblocktemplate; see [3]
 |eth_submitWork |✗|✓|✓|✗| In aion, fulfilled by submitblock; see [3] |  
 |eth_subscribe |✗|✓|✗|✗|Not in core Eth spec <span style="color:red">[@chAion]</span>
@@ -691,9 +862,9 @@ Won't keep this table around in the final version, but putting it here to organi
 
 #### notes:
 
-[1] https://github.com/aionnetwork/aion/wiki/JSON-RPC-API-Docs#21-unsupported-endpoints 
+[1] https://github.com/aionnetwork/aion/wiki/JSON-RPC-API-Docs#21-unsupported-endpoints
 
-[2] https://github.com/ethereum/EIPs/issues/1186 
+[2] https://github.com/ethereum/EIPs/issues/1186
 
 [3] `getblocktemplate` and `submitblock` are names from BTC (https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list).  When Aion RPC server was implemented, we were testing against a BTC miner which expected those names.  
 
