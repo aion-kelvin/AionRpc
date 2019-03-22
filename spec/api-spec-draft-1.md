@@ -1147,17 +1147,123 @@ None
 
 ### eth_protocolVersion
 
+Returns the Aion network P2p protocol version of the kernel
+
+#### Parameters
+none
+
+#### Returns
+
+`String` - the Aion network P2p protocol version of the kernel
+
+#### Example
+
+##### Request 
+
+        {"jsonrpc":"2.0","method":"eth_protocolVersion","params":[],"id":1}
+
+##### Response
+
+        {
+          "result": "0x0",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_sendRawTransaction
 
+Creates new message call transaction or a contract creation for signed transactions.
+
+#### Parameters
+
+1. `DATA`, The signed transaction data.
+
+##### Returns
+
+`DATA`, 32 Bytes - the transaction hash, or the zero hash if the transaction is not yet available.
+
+Use [eth_getTransactionReceipt](#eth_gettransactionreceipt) to get the contract address, after the transaction was mined, when you created a contract.
+
+#### Example
+
+##### Request 
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_sendRawTransaction",
+          "params": [
+            "0xf89c0ba0a06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f300620a80870584b388195418830186a08800000002540be40001b860baa9780538faa8beae8b51968ef34922086135bc5a442a7187a5924828ba568efcaa4d2ee4643424c3c2890fbfa9a92d97aedcac62ac860fc3bd02be7aebc50402d9b38c98dc9ccc77660ea8dae3f3a14aa1fcddeb3d282e63d58ad3382c7002"
+          ],
+          "id": 1
+        }
+
+##### Request 
+
+        {
+          "result": "0x99207e6fe9b3a728c28779410014ce5b7e1a4864fd6590f8cd3a423ecc827f93",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
-### eth_sendTransaction
+### eth_sendTransaction [FOLLOWUP]
+
+Creates new message call transaction or a contract creation, if the data field contains code.
+
+//TODO this requires unlockAccount, which isn't actually part of the core spec...
+
+#### Parameters
+
+1. `Object` - The transaction object
+  - `from`: `DATA`, 32 Bytes - The address the transaction is sent from.
+  - `to`: `DATA`, 32 Bytes - (empty when creating new contract) The address the transaction is directed to.
+  - `gas`: `QUANTITY`  - (optional; default for contract creation: 350000; for other transactions: 90000) Integer of the energy provided for the transaction execution. It will return unused energy.
+  - `gasPrice`: `QUANTITY`  - (optional, default: the value given by [eth_gasPrice](#eth_gasPrice)) Integer of the gasPrice used for each paid energy
+  - `value`: `QUANTITY`  - (optional) Integer of the value sent with this transaction
+  - `data`: `DATA`  - (optional) Empty for pure balance transfers; otherwise, the encoding of a contract for deployment or a contract method call.  For deatils, see http://abc //TODO
+  - `nonce`: `QUANTITY`  - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+  -  `type`: `DATA` - (optional; defaults to `0x00`) Type code of transaction. For details, see http://abc //TODO
+
+#### Returns
+
+`DATA`, 32 Bytes - the transaction hash, or the zero hash if the transaction is not yet available.
+
+Use [eth_getTransactionReceipt](#eth_gettransactionreceipt) to get the contract address, after the transaction was mined, when you created a contract.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_sendTransaction",
+          "params": [
+            {
+              "from": "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f",
+              "to": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "value": "0xa",
+              "gasPrice": "0x2540be400"
+            }
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0xb26476163dcd7c597939597c1bc330cc10a5158b121dfb176cb6bcc7dfc9622f",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
-### eth_sign
+### eth_sign [FOLLOWUP]
+
+Preamble uses `\u0019` or `\u0015`?
 
 ***
 
@@ -1171,7 +1277,38 @@ None
 
 ### eth_uninstallFilter
 
-***
+Uninstalls a filter with given id. Should always be called when watch is no longer needed.
+Additonally Filters timeout when they aren't requested with [eth_getFilterChanges](#eth_getfilterchanges) for a period of time.
+
+
+#### Parameters
+
+1. `QUANTITY` - The filter id.
+
+#### Returns
+
+`Boolean` - `true` if the filter was successfully uninstalled, otherwise `false`.
+
+#### Example 
+
+##### Request 
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_uninstallFilter",
+          "params": [
+            "0x0"
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": false,
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ### eth_signTransaction
 
