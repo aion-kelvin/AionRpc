@@ -346,7 +346,6 @@ Returns the balance of the account of given address.
 
         {"result":"0x33f8f8b675f988e5","id":"1","jsonrpc":"2.0"}
 
-
 ***
 
 ### eth_getBlockByHash
@@ -594,13 +593,165 @@ none
 
 ### eth_getFilterChanges
 
+Polling method for a filter, which returns an array of logs which occurred since last poll.
+
+#### Parameters
+
+1. `QUANTITY` - the filter id.
+
+#### Returns
+
+`Array` - Array of log objects, or an empty array if nothing has changed since last poll.
+
+- For filters created with `eth_newBlockFilter` the return are block hashes (`DATA`, 32 Bytes), e.g. `["0x3454645634534..."]`.
+- For filters created with `eth_newPendingTransactionFilter ` the return are transaction hashes (`DATA`, 32 Bytes), e.g. `["0x6345343454645..."]`.
+- For filters created with `eth_newFilter` logs are objects with following params:
+
+  - `removed`: `TAG` - `true` when the log was removed, due to a chain reorganization. `false` if its a valid log.
+  - `logIndex`: `QUANTITY` - integer of the log index position in the block. `null` when its pending log.
+  - `transactionIndex`: `QUANTITY` - integer of the transactions index position log was created from. `null` when its pending log.
+  - `transactionHash`: `DATA`, 32 Bytes - hash of the transactions this log was created from. `null` when its pending log.
+  - `blockHash`: `DATA`, 32 Bytes - hash of the block where this log was in. `null` when its pending. `null` when its pending log.
+  - `blockNumber`: `QUANTITY` - the block number where this log was in. `null` when its pending. `null` when its pending log.
+  - `address`: `DATA`, 32 Bytes - address from which this log originated.
+  - `data`: `DATA` - contains the non-indexed arguments of the log.
+  - `topics`: `Array of DATA` - Array of 0 to 4 32 Bytes `DATA` of indexed log arguments. (In *solidity*: The first topic is the *hash* of the signature of the event (e.g. `Deposit(address,bytes32,uint256)`), except you declared the event with the `anonymous` specifier.)
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_getFilterChanges",
+          "params": [
+            '0x3'
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": [
+            {
+              "blockHash": "0xf4dccf26fcfc3893b0a38cde4e4694b8c9279e1cd4a94d6eb21f039efd76ccb2",
+              "logIndex": "0x0",
+              "address": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "removed": false,
+              "data": "0x",
+              "topics": [
+                "0x67eeaf805d3ba71d5d1df73b5f05e3249852980c184ea5611bb188b3b2265d28",
+                "0x0000000000000000000000000000000000000000000000000000000000000539",
+                "0x23b22795e3b013308903cff5d6637f761a15b7075a6b5e0e167d821e8831a93d"
+              ],
+              "blockNumber": "0x24b5",
+              "transactionIndex": "0x0",
+              "transactionHash": "0xfb155778c1be20834a797361f8bc2866661ff3d85d36560bb38f44277065fb74"
+            }
+          ],
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
+
 ***
 
-### eth_getFilterLogs
+### eth_getFilterLogs //TODO should we delete this from our spec?
+
+Returns an array of all logs matching filter with given id.
+
+#### Parameters
+
+1. `QUANTITY` - The filter id.
+
+#### Returns
+
+See [eth_getFilterChanges](#eth_getfilterchanges)
+
+##### Request
+
+        {"jsonrpc":"2.0","method":"eth_getFilterLogs","params":["0x16"],"id":74}
+
+##### Response
+
+See [eth_getFilterChanges](#eth_getfilterchanges)
 
 ***
 
 ### eth_getLogs
+
+Returns an array of all logs matching a given filter object.
+
+#### Parameters
+
+1. `Object` - The filter options:
+  - `fromBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+  - `toBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+  - `address`: `DATA|Array`, 32 Bytes - (optional) Contract address or a list of addresses from which logs should originate.
+  - `topics`: `Array of DATA`,  - (optional) Array of 32 Bytes `DATA` topics. Topics are order-dependent. Each topic can also be an array of DATA with "or" options.
+
+#### Returns
+
+See [eth_getFilterChanges](#eth_getfilterchanges)
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_getLogs",
+          "params": [
+            {
+              "fromBlock": "0xb10",
+              "toBlock": "latest",
+              "topics": ["0x67eeaf805d3ba71d5d1df73b5f05e3249852980c184ea5611bb188b3b2265d28"]
+            }
+          ],
+          "id": 1
+        }
+
+
+##### Response
+
+        {
+          "result": [
+            {
+              "blockHash": "0xa7a302a2a8a6e518b623233456779562a5025189eb8dd75efdbeb556ef39fc45",
+              "logIndex": "0x0",
+              "address": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "removed": false,
+              "data": "0x",
+              "topics": [
+                "0x67eeaf805d3ba71d5d1df73b5f05e3249852980c184ea5611bb188b3b2265d28",
+                "0x000000000000000000000000000000000000000000000000000000000000002a",
+                "0xe9d225d603ac6b18ff1e21be8cbae33321b9d535e7a6401162a15c72fef25dfe"
+              ],
+              "blockNumber": "0xb12",
+              "transactionIndex": "0x0",
+              "transactionHash": "0x09daf72a7a45ecef18c14420082b4dc244eb0c79474f30b07895e9bd057df35e"
+            },
+            {
+              "blockHash": "0x0ff8afa48474fbe9eae4ab3c22a4a45ad84a3e8c0cbb1093879c1b3e74a1488f",
+              "logIndex": "0x0",
+              "address": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "removed": false,
+              "data": "0x",
+              "topics": [
+                "0x67eeaf805d3ba71d5d1df73b5f05e3249852980c184ea5611bb188b3b2265d28",
+                "0x0000000000000000000000000000000000000000000000000000000000000539",
+                "0x23b22795e3b013308903cff5d6637f761a15b7075a6b5e0e167d821e8831a93d"
+              ],
+              "blockNumber": "0x2230",
+              "transactionIndex": "0x0",
+              "transactionHash": "0x3d1fdf4dd19b50a15d382cb12d6852e98ff1e1e8d9456de4645460d692e2e392"
+            }
+          ],
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 
 ***
 
@@ -856,13 +1007,12 @@ none
 
 ### eth_mining
 
-
 Returns `true` if node is actively mining new blocks.
 
-##### Parameters
+#### Parameters
 none
 
-##### Returns
+#### Returns
 
 `Boolean` - returns `true` of the client is mining, otherwise `false`.
 
@@ -880,13 +1030,118 @@ none
 
 ### eth_newBlockFilter
 
+Creates a filter in the node, to notify when a new block arrives.
+To check if the state has changed, call [eth_getFilterChanges](#eth_getfilterchanges).
+
+#### Parameters
+
+None
+
+#### Returns
+
+`QUANTITY` - A filter id.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_newBlockFilter",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0x4",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
 ***
 
 ### eth_newFilter
 
+Creates a filter object, based on filter options, to notify when the state changes (logs).
+To check if the state has changed, call [eth_getFilterChanges](#eth_getfilterchanges).
+
+#### A note on specifying topic filters:
+
+Topics are order-dependent. A transaction with a log with topics [A, B] will be matched by the following topic filters:
+* `[]` "anything"
+* `[A]` "A in first position (and anything after)"
+* `[null, B]` "anything in first position AND B in second position (and anything after)"
+* `[A, B]` "A in first position AND B in second position (and anything after)"
+* `[[A, B], [A, B]]` "(A OR B) in first position AND (A OR B) in second position (and anything after)"
+
+#### Parameters
+
+1. `Object` - The filter options:
+  - `fromBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+  - `toBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+  - `address`: `DATA|Array`, 20 Bytes - (optional) Contract address or a list of addresses from which logs should originate.
+  - `topics`: `Array of DATA`,  - (optional) Array of 32 Bytes `DATA` topics. Topics are order-dependent. Each topic can also be an array of DATA with "or" options.
+
+##### Returns
+
+`QUANTITY` - The newly created filter's id.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_newFilter",
+          "params": [
+            {
+              "topics": ["0x67eeaf805d3ba71d5d1df73b5f05e3249852980c184ea5611bb188b3b2265d28"]
+            }
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0x5",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 ***
 
 ### eth_newPendingTransactionFilter
+
+Creates a filter in the node, to notify when new pending transactions arrive.
+To check if the state has changed, call [eth_getFilterChanges](#eth_getfilterchanges).
+
+##### Parameters
+None
+
+##### Returns
+
+`QUANTITY` - A filter id.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_newPendingTransactionFilter",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0x4",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
