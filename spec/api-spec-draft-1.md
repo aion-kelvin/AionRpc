@@ -323,6 +323,8 @@ none
           "jsonrpc": "2.0"
         }
 
+***
+
 ### eth_getBalance [FOLLOWUP - latest/earliest/pending]
 
 Returns the balance of the account of given address.
@@ -686,10 +688,10 @@ Returns an array of all logs matching a given filter object.
 #### Parameters
 
 1. `Object` - The filter options:
-  - `fromBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
-  - `toBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
-  - `address`: `DATA|Array`, 32 Bytes - (optional) Contract address or a list of addresses from which logs should originate.
-  - `topics`: `Array of DATA`,  - (optional) Array of 32 Bytes `DATA` topics. Topics are order-dependent. Each topic can also be an array of DATA with "or" options.
+    - `fromBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+    - `toBlock`: `QUANTITY|TAG` - (optional, default: `"latest"`) Integer block number, or `"latest"` for the last mined block or `"pending"`, `"earliest"` for not yet mined transactions.
+    - `address`: `DATA|Array`, 32 Bytes - (optional) Contract address or a list of addresses from which logs should originate.
+    - `topics`: `Array of DATA`,  - (optional) Array of 32 Bytes `DATA` topics. Topics are order-dependent. Each topic can also be an array of DATA with "or" options.
 
 #### Returns
 
@@ -1263,15 +1265,130 @@ Use [eth_getTransactionReceipt](#eth_gettransactionreceipt) to get the contract 
 
 ### eth_sign [FOLLOWUP]
 
-Preamble uses `\u0019` or `\u0015`?
+The sign method calculates an Aion-specific signature with: `sign(keccak256("\x15Aion Signed Message:\n" + len(message) + message)))`.
 
+By adding a prefix to the message makes the calculated signature recognisable as an Ethereum specific signature. This prevents misuse where a malicious DApp can sign arbitrary data (e.g. transaction) and use the signature to impersonate the victim.
+
+**Note** the address to sign with must be unlocked.  //TODO
+
+#### Parameters
+
+1. `DATA`, 32 bytes - address.
+2. `DATA`, N bytes - message to sign.
+
+#### Returns
+
+`DATA`: Signature
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_sign",
+          "params": [
+            "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f",
+            "0xdeadbeef"
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0x09b7f34fe24212e57e9c11f79627a58902b5ebadb7dd18b8d885104ddc818fb5312c32a6211aa5867e6403cb90ea1a1e564d470f203d370a36f347187da6fe00",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
+```
 ***
 
 ### eth_submitHashrate
 
+Used for submitting mining hashrate.
+
+
+#### Parameters
+
+1. `QUANTITY` - The filter id.
+2. `DATA` - A hexadecimal(32 bytes) ID identifying the client
+
+#### Returns
+
+`Boolean` - returns `true` if submitting went through succesfully and `false` otherwise.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_submitHashrate",
+          "params": [
+            "0x1f",
+            "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c"
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "id":1,
+          "jsonrpc":"2.0",
+          "result": true
+        }
+
 ***
 
 ### eth_syncing
+
+Returns an object with data about the sync status or `false`.
+
+
+#### Parameters
+
+none
+
+#### Returns
+
+`Object|Boolean`, An object with sync status data or `FALSE`, when not syncing:
+  - `startingBlock`: `QUANTITY` - The block at which the import started (will only be reset, after the sync reached his head)
+  - `currentBlock`: `QUANTITY` - The current block, same as eth_blockNumber
+  - `highestBlock`: `QUANTITY` - The estimated highest block of the network (0 if no peers)
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_syncing",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        // When syncing
+        {
+          "id":1,
+          "jsonrpc": "2.0",
+          "result": {
+            startingBlock: '0x384',
+            currentBlock: '0x386',
+            highestBlock: '0x454'
+          }
+        }
+        
+        // Or when not syncing
+        {
+          "id":1,
+          "jsonrpc": "2.0",
+          "result": false
+        }
 
 ***
 
@@ -1310,11 +1427,63 @@ Additonally Filters timeout when they aren't requested with [eth_getFilterChange
           "jsonrpc": "2.0"
         }
 
-### eth_signTransaction
+### eth_signTransaction [TODO]
 
-***
+Signs a transaction object (but does not send it).
 
-### eth_getProof
+//TODO this requires unlockAccount, which isn't actually part of the core spec...
+
+#### Parameters
+
+1. `Object` - The transaction object (see [eth_sendTransaction](#eth_sendTransaction))
+
+#### Returns
+
+`Object`, the transaction object and raw signed transaction
+
+  - `tx`: `Object` - The transaction that was signed (missing optional parameters are automatically populated by the kernel and those values are shown here). See parameters of [eth_sendTransaction](#eth_sendTransaction) for details on the transaction object.
+  - `raw`: `DATA` - The raw RLP-encoded signed transaction.  Can be passed to [eth_sendRawTransaction](#eth_sendRawTransaction).
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "eth_signTransaction",
+          "params": [
+            {
+              "from": "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f",
+              "to": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "value": "0xa",
+              "gas": "0xea60",
+              "gasPrice": "0x2540be400"
+            },
+            "0xa0f2d72200bf3271725d272ff3fa5a4ac6dc576854e367e6f39a0fd32e2d962f"
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": {
+            "tx": {
+              "nrgPrice": "0x2540be400",
+              "data": "0x",
+              "nrg": "0xea60",
+              "gas": "0xea60",
+              "to": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
+              "nonce": "0x0d",
+              "value": "0x0a",
+              "hash": "0x3ad98b558a9b59f00c2326d5027dc473fea23c773a4a5b0a374bc7c6d8b43f1e",
+              "gasPrice": "0x2540be400"
+            },
+            "raw": "0xf89c0da0a06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f300620a8088000584f12f9c168882ea608800000002540be40001b860baa9780538faa8beae8b51968ef34922086135bc5a442a7187a5924828ba568e3af7c88b14f6209567eb2cd3ffaeb877327becf8722a13452c00469e0a5effd6ca87652036a03d6dd6a0c36581746946bc2318bf9334f2dd1cae5c4e26557b0b"
+          },
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ***
 
@@ -1387,7 +1556,7 @@ Won't keep this table around in the final version, but putting it here to organi
 |eth_signTransaction |✓|✓|✗|✓ | Introduced in Aion; never existed in Eth |
 |eth_compileLLL |✗|✗|✓|✗ |LLL not supported by Aion; see [1] |
 |eth_compileSerpent |✗|✗|✓|✗ |Serpent not supported by Aion; see [1] |
-|eth_getProof |✗|✗|✓|✓| Was recently added to Eth (see [2]); we should add it too <span style="color:red">[@chAion]</span>
+|eth_getProof |✗|✗|✓|✗| Was recently added to Eth (see [2]); we should add it too, but not clear how it will look for storage and state proof, so not including in spec for now.
 |eth_getUncleByBlockHashAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
 |eth_getUncleByBlockNumberAndIndex |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
 |eth_getUncleCountByBlockHash |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
