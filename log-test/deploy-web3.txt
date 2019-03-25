@@ -1,0 +1,40 @@
+// compile and deploy
+let counterSol = fs.readFileSync("Counter.sol", "utf8"); 
+web3.eth.compileSolidity(counterSol).then((res) => compiled = res); 
+
+let contractInst = new eth.Contract(compiled.Counter.info.abiDefinition);
+let deploy = contractInst.deploy( {data:compiled.Counter.code, arguments: []} ).encodeABI();
+let deployTx = { gas: 4000000, gasPrice: 10000000000, data: deploy, from: account.address };
+eth.accounts.signTransaction( deployTx, account.privateKey ).then( (res) => signedTx = res );
+
+web3.eth.sendSignedTransaction( signedTx.rawTransaction 
+  ).on('receipt', receipt => { 
+     console.log("Receipt received!\ntxHash =", receipt.transactionHash, 
+                 "\ncontractAddress =", receipt.contractAddress);
+     ctAddress = receipt.contractAddress;
+});
+
+// --
+// execute
+
+myCall = {
+    from: account.address, 
+    to: ctAddress, 
+    gas:54321, 
+    data: contractInst.methods.emitEv(1337, "are belong to us").encodeABI()
+};
+
+web3.eth.accounts.signTransaction(
+    myCall, account.privateKey
+  ).then((res) => sc = res); 
+
+
+web3.eth.sendSignedTransaction(
+    sc.rawTransaction
+    ).on('transactionHash', txHash => { 
+      console.log("txHash", txHash) }
+    ).on('receipt',
+      receipt => { console.log("receipt", receipt) }
+    );
+
+
