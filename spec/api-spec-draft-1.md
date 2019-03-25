@@ -1489,7 +1489,175 @@ Signs a transaction object (but does not send it).
 
 ## net module
 
+### net_version
+
+Returns the current network id.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`String` - The current network id. //TODO should we just make this hex?
+- `"1"`: Aion Mainnet
+- `"32"`: Mastery Testnet
+- `"31"`: avmtestnet Testnet
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "net_version",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "32",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
+***
+
+### net_listening
+
+Returns `true` if client is actively listening for network connections.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`Boolean` - `true` when listening, otherwise `false`.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "net_listening",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": true,
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
+***
+
+### net_peerCount
+
+Returns number of peers currently connected to the client.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`QUANTITY` - integer of the number of connected peers.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "net_peerCount",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "id":1,
+          "jsonrpc": "2.0",
+          "result": "0x2"
+        }
+
+***
+
 ## web3 module
+
+### web3_clientVersion
+
+Returns the current kernel version.
+
+#### Parameters
+
+none
+
+#### Returns
+
+`QUANTITY` - integer of the number of connected peers.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "web3_clientVersion",
+          "params": [],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "Aion(J)/v0.3.3.fe7a3ea/Linux/Java-11.0.1",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
+
+***
+
+### web3_sha3
+
+Returns Keccak-256 (*not* the standardized SHA3-256) of the given data.
+
+#### Parameters
+
+1. `DATA` - the data to convert into a SHA3 hash.
+
+#### Returns
+
+`DATA` - The SHA3 result of the given string.
+
+#### Example
+
+##### Request
+
+        {
+          "jsonrpc": "2.0",
+          "method": "web3_sha3",
+          "params": [
+            "0x68656c6c6f20776f726c64"
+          ],
+          "id": 1
+        }
+
+##### Response
+
+        {
+          "result": "0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+          "id": 1,
+          "jsonrpc": "2.0"
+        }
 
 ## 4. Application error codes
 
