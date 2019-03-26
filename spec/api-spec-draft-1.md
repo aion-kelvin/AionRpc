@@ -20,9 +20,11 @@ For request, in addition to the four members defined in JSON-RPC 2.0 (`jsonrpc`,
 
 ### Data types and formatting
 
-At present there are two key datatypes that are passed over JSON (except for `eth_hashrate`, will be elaborated upon below): unformatted byte arrays and quantities. Both are passed with a hex encoding, however with different requirements to formatting:
+#### QUANTITY and DATA
 
-When encoding **QUANTITIES** (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0"). Examples:
+In addition to the six data types defined by JSON, there are two key additional datatypes used in Aion JSON-RPC API: quantities and unformatted byte arrays.  Both are passed with a hex encoding represented by a JSON string, but with different requirements to formatting:
+
+When encoding a `QUANTITY` (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0"). Examples:
 
 - 0x41 (65 in decimal)
 - 0x400 (1024 in decimal)
@@ -30,13 +32,29 @@ When encoding **QUANTITIES** (integers, numbers): encode as hex, prefix with "0x
 - WRONG: 0x0400 (no leading zeroes allowed)
 - WRONG: ff (must be prefixed 0x)
 
-When encoding **UNFORMATTED DATA** (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte. Examples:
+When encoding unformatted `DATA` (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte. Examples:
 
 - 0x41 (size 1, "A")
 - 0x004200 (size 3, "\0B\0")
 - 0x (size 0, "")
 - WRONG: 0xf0f0f (must be even number of digits)
 - WRONG: 004200 (must be prefixed 0x)
+
+#### The default block parameter
+
+The following methods have an extra default block parameter:
+
+- [eth_getBalance](#eth_getbalance)
+- [eth_getCode](#eth_getcode)
+- [eth_getTransactionCount](#eth_gettransactioncount)
+- [eth_getStorageAt](#eth_getstorageat)
+- [eth_call](#eth_call)
+
+When requests are made that act on the state of an Aion blockchain, the default block parameter determines the height of the block.  This parameter uses the data type, `TAG`.  The following values are possible for this type:
+
+- `String "earliest"` for the earliest/genesis block
+- `String "latest"` - for the latest mined block
+- `String "pending"` - for the pending state/transactions
 
 ## 3. API methods
 
