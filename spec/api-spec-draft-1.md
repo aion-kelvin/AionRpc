@@ -1302,7 +1302,6 @@ By adding a prefix to the message makes the calculated signature recognisable as
           "jsonrpc": "2.0"
         }
 
-```
 ***
 
 ### eth_submitHashrate
