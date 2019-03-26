@@ -757,7 +757,66 @@ See [eth_getFilterChanges](#eth_getfilterchanges)
 
 ***
 
-### eth_getStorageAt [TODO]
+### eth_getStorageAt
+
+Returns the value from a storage position at a given address. 
+
+#### Parameters
+
+1. `DATA`, 20 Bytes - address of the storage.
+2. `QUANTITY` - integer of the position in the storage.
+3. `QUANTITY|TAG` - integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter) //TODO
+
+#### Returns
+
+`DATA` - the value at this storage position.
+
+#### Example
+
+Calculating the correct position depends on the storage to retrieve.  The example below is for FVM contracts.
+
+Consider the following contract deployed at `0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465` by address `0xa06e78398580c0f37add71f2b8914bcef5be4938b05e024b96da75438d074ef0`.
+
+        contract Storage {
+            uint pos0;
+            mapping(address => uint) pos1;
+        
+            function Storage() {
+                pos0 = 1234;
+                pos1[msg.sender] = 5678;
+            }
+        }
+
+Retrieving the value of pos0 is straight forward:
+
+
+        curl -X POST --data '{"jsonrpc":"2.0", "method": "eth_getStorageAt", "params": ["0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465", "0x0", "latest"], "id": 1}' localhost:8545
+        
+        {"jsonrpc":"2.0","id":1,"result":"0x00000000000000000000000000000000000000000000000000000000000004d2"}
+
+
+Retrieving an element of the map is harder. The position of an element in the map is calculated with:
+
+        keccack(LeftPad32(key, 0), LeftPad32(map position, 0))
+
+
+This means to retrieve the storage on pos1["0xa06e78398580c0f37add71f2b8914bcef5be4938b05e024b96da75438d074ef0"] we need to calculate the position with:
+
+        keccak(decodeHex("000000000000000000000000391694e7e0b0cce554cb130d723a9d27458f9298" + "0000000000000000000000000000000000000000000000000000000000000001"))
+
+The [aion-web3](https://github.com/aionnetwork/aion_web3/) library's console can be used to make the calculation:
+
+        > var key = "000000000000000000000000391694e7e0b0cce554cb130d723a9d27458f9298" + "0000000000000000000000000000000000000000000000000000000000000001"
+        undefined
+        > web3.sha3(key, {"encoding": "hex"})
+        "0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9"
+
+Now to fetch the storage:
+
+        curl -X POST --data '{"jsonrpc":"2.0", "method": "eth_getStorageAt", "params": ["0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465", "0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9", "latest"], "id": 1}' localhost:8545
+        
+        {"jsonrpc":"2.0","id":1,"result":"0x000000000000000000000000000000000000000000000000000000000000162e"}
+
 
 ***
 
@@ -788,7 +847,7 @@ see [eth_getTransactionByHash](#eth_gettransactionbyhash)
 
 ***
 
-### eth_getTransactionByBlockNumberAndIndex [JAVA]
+### eth_getTransactionByBlockNumberAndIndex
 
 Returns information about a transaction by block number and transaction index position.
 
@@ -1659,6 +1718,25 @@ Returns Keccak-256 (*not* the standardized SHA3-256) of the given data.
         }
 
 ## 4. Application error codes
+
+Aion JSON-RPC API inherits the following standard error codes from JSON-RPC 2.0:
+
+| Code    | Possible Return message | Description |
+| --------|-------------------------|-------------|
+|-32700 | Parse error       | Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text. |
+|-32600 | Invalid Request   | The JSON sent is not a valid Request object. |
+|-32601 | Method not found  | The method does not exist / is not available. |
+|-32602 | Invalid params    | Invalid method parameter(s). |
+|-32603 | Internal error    | Internal JSON-RPC error. Should be used as a general error when a more specific error cannot be provided. |
+
+In addition, Aion JSON-RPC API defines the following custom error codes:
+
+| Code    | Possible Return message | Description |
+| --------|-------------------------|-------------|
+|1 | Unauthorized       | Should be used when some action is not authorized, e.g. sending from a locked account.
+|2 | Action not allowed | Should be used when some action is not allowed, for instance, calling an API method that has been disabled in configuration.
+|3 | Execution error    | Should be used to when any kind of failure during transaction execution.   |
+|4 | Compilation error  | Should be used to indicate Solidity compilation errors.  |
 
 ## 5. Appendix
 
