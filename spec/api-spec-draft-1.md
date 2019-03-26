@@ -38,15 +38,9 @@ When encoding unformatted `DATA` (byte arrays, account addresses, hashes, byteco
 - WRONG: 0xf0f0f (must be even number of digits)
 - WRONG: 004200 (must be prefixed 0x)
 
-#### The default block parameter
+#### Default block parameter
 
-The following methods have an extra default block parameter:
-
-- [eth_getBalance](#eth_getbalance)
-- [eth_getCode](#eth_getcode)
-- [eth_getTransactionCount](#eth_gettransactioncount)
-- [eth_getStorageAt](#eth_getstorageat)
-- [eth_call](#eth_call)
+Some methods have an extra default block parameter; for instance, [eth_getBalance](#eth_getbalance) or [eth_getTransactionCount](#eth_gettransactioncount).
 
 When requests are made that act on the state of an Aion blockchain, the default block parameter determines the height of the block.  This parameter uses the data type, `TAG`.  The following values are possible for this type:
 
@@ -126,7 +120,7 @@ none
 #### Response
 
         {
-          "result": 2714561,
+          "result": 0x296bc1,
           "id": 1,
           "jsonrpc": "2.0"
         }
@@ -146,7 +140,7 @@ Executes a new message call immediately without creating a transaction on the bl
   - `gasPrice`: `QUANTITY`  - (optional) Integer of the gasPrice used for each paid energy
   - `value`: `QUANTITY`  - (optional) Integer of the value sent with this transaction
   - `data`: `DATA`  - (optional) Hash of the method signature and encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) //TODO
-2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter) //TODO
+2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#default-block-parameter)
 
 #### Returns
 
@@ -342,7 +336,7 @@ Returns the balance of the account of given address.
 #### Parameters
 
 1. `DATA`, 32 bytes - adddress to check for balance.
-1. `QUANTITY|TAG` - (optional) integer block number, or the string "latest", "earliest" or "pending", see the default block parameter.
+1. `QUANTITY|TAG` - (optional) integer block number, or the string "latest", "earliest" or "pending", see the [default block parameter](#default-block-parameter)
 
 #### Returns
 
@@ -455,12 +449,12 @@ Returns information about a block by block number.
 
 #### Parameters
 
-1. `QUANTITY|TAG`, integer of a block number, or the string "earliest", "latest" or "pending", as in the default block parameter. //TODO formatting
+1. `QUANTITY|TAG`, integer of a block number, or the string "earliest", "latest" or "pending", as in the [default block parameter](#default-block-parameter)
 1. `Boolean` - (optional) If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.  If not provided, assumed to be `false`.
 
 #### Returns
 
-See eth_getBlockByHash //TODO formatting
+See [eth_getBlockByHash](#eth_getBlockByHash)
 
 #### Examples
 
@@ -470,7 +464,7 @@ See eth_getBlockByHash //TODO formatting
 
 ##### Response
 
-See eth_getBlockByHash //TODO formatting
+See [eth_getBlockByHash](#eth_getBlockByHash)
 
 ***
 
@@ -515,7 +509,7 @@ Returns the number of transactions in a block matching the given block number.
 
 #### Parameters
 
-1. `QUANTITY|TAG` - integer of a block number, or the string `"earliest"`, `"latest"` or `"pending"`, as in the [default block parameter](#the-default-block-parameter). //TODO
+1. `QUANTITY|TAG` - integer of a block number, or the string `"earliest"`, `"latest"` or `"pending"`, as in the [default block parameter](#default-block-parameter)
 
 #### Returns
 
@@ -551,7 +545,7 @@ Returns code at a given address.
 #### Parameters
 
 1. `DATA`, 32 bytes - address.
-2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter). //TODO
+2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#default-block-parameter).
 
 #### Returns
 
@@ -669,7 +663,7 @@ Polling method for a filter, which returns an array of logs which occurred since
 
 ***
 
-### eth_getFilterLogs //TODO should we delete this from our spec?
+### eth_getFilterLogs
 
 Returns an array of all logs matching filter with given id.
 
@@ -775,7 +769,7 @@ Returns the value from a storage position at a given address.
 
 1. `DATA`, 20 Bytes - address of the storage.
 2. `QUANTITY` - integer of the position in the storage.
-3. `QUANTITY|TAG` - integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#the-default-block-parameter) //TODO
+3. `QUANTITY|TAG` - integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#default-block-parameter)
 
 #### Returns
 
@@ -1002,7 +996,7 @@ Returns the receipt of a transaction by transaction hash.
   - `contractAddress `: `DATA`, 20 Bytes - The contract address created, if the transaction was a contract creation, otherwise `null`.
   - `logs`: `Array` - Array of log objects, which this transaction generated.
   - `logsBloom`: `DATA`, 256 Bytes - Bloom filter for light clients to quickly retrieve related logs.  
-  - `root` : `DATA` 32 bytes of post-transaction stateroot if it was successful //TODO check against impls
+  - `root` : `DATA` 32 bytes of post-transaction stateroot if it was successful
   - `status`: `QUANTITY` either `1` (success) or `0` (failure)
 
 #### Example
@@ -1280,11 +1274,11 @@ Use [eth_getTransactionReceipt](#eth_gettransactionreceipt) to get the contract 
 
 ***
 
-### eth_sendTransaction [FOLLOWUP]
+### eth_sendTransaction
 
 Creates new message call transaction or a contract creation, if the data field contains code.
 
-//TODO this requires unlockAccount, which isn't actually part of the core spec...
+This method requires that the account of the transaction sender be unlocked.
 
 #### Parameters
 
@@ -1338,7 +1332,7 @@ The sign method calculates an Aion-specific signature with: `sign(keccak256("\x1
 
 By adding a prefix to the message makes the calculated signature recognisable as an Ethereum specific signature. This prevents misuse where a malicious DApp can sign arbitrary data (e.g. transaction) and use the signature to impersonate the victim.
 
-**Note** the address to sign with must be unlocked.  //TODO
+This method requires that the account of the transaction sender be unlocked.
 
 #### Parameters
 
@@ -1495,11 +1489,11 @@ Additonally Filters timeout when they aren't requested with [eth_getFilterChange
           "jsonrpc": "2.0"
         }
 
-### eth_signTransaction [TODO]
+### eth_signTransaction
 
 Signs a transaction object (but does not send it).
 
-//TODO this requires unlockAccount, which isn't actually part of the core spec...
+This method requires that the account of the transaction sender be unlocked.
 
 #### Parameters
 
@@ -1567,7 +1561,7 @@ none
 
 #### Returns
 
-`String` - The current network id. //TODO should we just make this hex?
+`String` - The current network id.
 - `"1"`: Aion Mainnet
 - `"32"`: Mastery Testnet
 - `"31"`: avmtestnet Testnet
