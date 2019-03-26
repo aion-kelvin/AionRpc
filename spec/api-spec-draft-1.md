@@ -329,7 +329,7 @@ none
 
 ***
 
-### eth_getBalance [FOLLOWUP - latest/earliest/pending]
+### eth_getBalance
 
 Returns the balance of the account of given address.
 
@@ -418,20 +418,20 @@ Returns information about a block by hash.
             "gasUsed": "0x7c1e",
             "timestamp": "0x5c8c04f9"
             "transactions": [
-              { //TODO: should i truncate this? also, some of these are wrong
+              {
                 "nrgPrice": "0x4a817c800",
-                "nrg": 31774,
+                "nrg": "0x7c1e",
                 "transactionIndex": 0,
-                "nonce": 3771,
+                "nonce": "0xebb",
                 "input": "0x4178462f00000000000000000000000000000021",
-                "blockNumber": 2673897,
-                "gas": 31774,
+                "blockNumber": "0x28cce9",
+                "gas": "0x7c1e",
                 "from": "0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63",
                 "to": "0xa03cc62caf592513a6e0626c0d7631c66ea2430c15a18dc43a51a65dcb359da0",
                 "value": "0x",
                 "hash": "0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831",
                 "gasPrice": "0x4a817c800",
-                "timestamp": 1552680185 // TODO wrong timestamp
+                "timestamp": "0x5c8c04f9"
               }
             ],
             "solution": "0x006521b29b... ", /* truncated for readability */
@@ -937,7 +937,7 @@ Returns the information about a transaction requested by transaction hash.
 
 ***
 
-### eth_getTransactionCount [FOLLOWUP - latest/earliest/pending]
+### eth_getTransactionCount
 
 Returns the number of transactions *sent* from an address.
 
@@ -1326,7 +1326,7 @@ Use [eth_getTransactionReceipt](#eth_gettransactionreceipt) to get the contract 
 
 ***
 
-### eth_sign [FOLLOWUP]
+### eth_sign
 
 The sign method calculates an Aion-specific signature with: `sign(keccak256("\x15Aion Signed Message:\n" + len(message) + message)))`.
 
