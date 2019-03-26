@@ -367,11 +367,11 @@ Returns information about a block by hash.
 
 `Object` - A block object, or null when no block was found:
 
-  - `number`: `QUANTITY` - the block number. `null` when its pending block.
-  - `hash`: `DATA`, 32 Bytes - hash of the block. `null` when its pending block.
+  - `number`: `QUANTITY` - the block number. `null` when it is pending block.
+  - `hash`: `DATA`, 32 Bytes - hash of the block. `null` when it is pending block.
   - `parentHash`: `DATA`, 32 Bytes - hash of the parent block.
-  - `nonce`: `DATA`, 32 Bytes - nonce of the generated proof-of-work. `null` when its pending block.
-  - `logsBloom`: `DATA`, 256 Bytes - the bloom filter for the logs of the block. `null` when its pending block.
+  - `nonce`: `DATA`, 32 Bytes - nonce of the generated proof-of-work. `null` when it is pending block.
+  - `logsBloom`: `DATA`, 256 Bytes - the bloom filter for the logs of the block. `null` when it is pending block.
   - `transactionsRoot`: `DATA`, 32 Bytes - the root of the transaction trie of the block.
   - `stateRoot`: `DATA`, 32 Bytes - the root of the final state trie of the block.
   - `receiptsRoot`: `DATA`, 32 Bytes - the root of the receipts trie of the block.
@@ -1288,7 +1288,9 @@ This method requires that the account of the transaction sender be unlocked.
   - `gas`: `QUANTITY`  - (optional; default for contract creation: 350000; for other transactions: 90000) Integer of the energy provided for the transaction execution. It will return unused energy.
   - `gasPrice`: `QUANTITY`  - (optional, default: the value given by [eth_gasPrice](#eth_gasPrice)) Integer of the gasPrice used for each paid energy
   - `value`: `QUANTITY`  - (optional) Integer of the value sent with this transaction
-  - `data`: `DATA`  - (optional) Empty for pure balance transfers; otherwise, the encoding of a contract for deployment or a contract method call.  For deatils, see http://abc //TODO
+  - `data`: `DATA`  - (optional) Empty for pure balance transfers; otherwise, the encoding of a contract for deployment or a contract method call.  Details for encoding depends on VM for that type of transaction:
+     - [AionVM ABI specification](https://github.com/aionnetwork/AVM/wiki/ABI-Specification)
+     - [FastVM ABI specification](https://github.com/aionnetwork/aion_fastvm/wiki/Specifications#abi-types)
   - `nonce`: `QUANTITY`  - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
   -  `type`: `DATA` - (optional; defaults to `0x00`) Type code of transaction. For details, see http://abc //TODO
 
@@ -1564,7 +1566,6 @@ none
 `String` - The current network id.
 - `"1"`: Aion Mainnet
 - `"32"`: Mastery Testnet
-- `"31"`: avmtestnet Testnet
 
 #### Example
 
@@ -1814,7 +1815,6 @@ Won't keep this table around in the final version, but putting it here to organi
 |eth_submitWork |✗|✓|✓|✗| In aion, fulfilled by submitblock; see [3] |  
 |eth_subscribe |✗|✓|✗|✗|Not in core Eth spec 
 |eth_unsubscribe |✗|✓|✗|✗ |Not in core Eth spec
-
 
 #### notes:
 
