@@ -6,8 +6,6 @@ Last update: 2018-03-18
 
 Aion JSON-RPC API is an API for interacting with Aion nodes.  This specification defines the protocol for API; the methods of the API, and error codes used by those methods.  It is based upon [Ethereum's JSON-RPC API](https://github.com/ethereum/wiki/wiki/JSON-RPC), with modifications to accommodate the Aion blockchain.
 
-<span style="color:red">This is a draft.  Editing-related text will be written in red.</span>
-
 ## 2. Protocol
 
 ### Data structures
@@ -16,7 +14,7 @@ Aion JSON-RPC API uses the [JSON-RPC 2.0](https://www.jsonrpc.org/specification)
 
 For request, in addition to the four members defined in JSON-RPC 2.0 (`jsonrpc`, `method`, `params`, `id`), the client may optionally include an extra member:
 
-**aion-api**: A String containing the Aion JSON-RPC API version that the request is using.  The server is not required to respect the version, but it should to do so when possible. <span style="color:red">[@chAion]</span>
+**aion-api**: A String containing the Aion JSON-RPC API version that the request is using.  The server is not required to respect the version, but it should to do so when possible.
 
 ### Data types and formatting
 
@@ -72,15 +70,9 @@ Non-core:
 - stratum
 - ops
 - priv
-- <span style="color:red"></span>
 
 
 ## eth module
-
-[PENDING] => waiting for sign-off from chaion
-[EXAMPLE] => example
-[FOLLOWUP] => need more info/analysis
-[OK] => done
 
 ### eth_accounts
 
@@ -235,7 +227,7 @@ Returns compiled solidity code.
         {
           "jsonrpc": "2.0",
           "method": "eth_compileSolidity",
-          "params": ["contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }"],
+          "params": ["contract test { function multiply(uint a) returns(uint d) { return a * 7; } }"],
           "id": 1
         }
 #### Response
@@ -1826,7 +1818,7 @@ Won't keep this table around in the final version, but putting it here to organi
 |eth_getUncleCountByBlockNumber |✗|✗|✓|✗ |Aion doesn't have 'uncle'; see [1] |
 |eth_getWork |✗|✓|✓|✗| In aion, fulfilled by getblocktemplate; see [3]
 |eth_submitWork |✗|✓|✓|✗| In aion, fulfilled by submitblock; see [3] |  
-|eth_subscribe |✗|✓|✗|✗|Not in core Eth spec <span style="color:red">[@chAion]</span>
+|eth_subscribe |✗|✓|✗|✗|Not in core Eth spec 
 |eth_unsubscribe |✗|✓|✗|✗ |Not in core Eth spec
 
 
@@ -1842,5 +1834,4 @@ Won't keep this table around in the final version, but putting it here to organi
 
 - use consistent format for examples
 - "latest" "earliest" "pending" -- are they actually implemented in the places where they should be?  does it work for all methods where they're supposed to work?  also need to add a section explaining it in this spec
-- getCode - AVM result?
 - sanitize examples
