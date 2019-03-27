@@ -1506,7 +1506,6 @@ This method requires that the account of the transaction sender be unlocked.
 `Object`, the transaction object and raw signed transaction
 
   - `tx`: `Object` - The transaction that was signed (missing optional parameters are automatically populated by the kernel and those values are shown here). See parameters of [eth_sendTransaction](#eth_sendTransaction) for details on the transaction object.
-  - `raw`: `DATA` - The raw RLP-encoded signed transaction.  Can be passed to [eth_sendRawTransaction](#eth_sendRawTransaction).
 
 #### Example
 
@@ -1534,7 +1533,7 @@ This method requires that the account of the transaction sender be unlocked.
           "result": {
             "tx": {
               "nrgPrice": "0x2540be400",
-              "data": "0x",
+              "input": "0x",
               "nrg": "0xea60",
               "gas": "0xea60",
               "to": "0xa06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f30062",
@@ -1542,6 +1541,7 @@ This method requires that the account of the transaction sender be unlocked.
               "value": "0x0a",
               "hash": "0x3ad98b558a9b59f00c2326d5027dc473fea23c773a4a5b0a374bc7c6d8b43f1e",
               "gasPrice": "0x2540be400"
+              //TODO more fields
             },
             "raw": "0xf89c0da0a06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f300620a8088000584f12f9c168882ea608800000002540be40001b860baa9780538faa8beae8b51968ef34922086135bc5a442a7187a5924828ba568e3af7c88b14f6209567eb2cd3ffaeb877327becf8722a13452c00469e0a5effd6ca87652036a03d6dd6a0c36581746946bc2318bf9334f2dd1cae5c4e26557b0b"
           },
