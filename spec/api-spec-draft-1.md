@@ -84,7 +84,7 @@ none
 
 ##### Request
 
-        '{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}'
+        '{"jsonrpc":"2.0", "method":"eth_accounts", "params":[], "id":1}'
 
 ##### Response
 
@@ -115,7 +115,7 @@ none
 
 ##### Request
 
-        '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+        '{"jsonrpc":"2.0", "method":"eth_blockNumber", "params":[],"id":1}'
 
 #### Response
 
@@ -139,7 +139,9 @@ Executes a new message call immediately without creating a transaction on the bl
   - `gas`: `QUANTITY`  - (optional) Integer of the energy provided for the transaction execution. eth_call consumes zero energy, but this parameter may be needed by some executions.
   - `gasPrice`: `QUANTITY`  - (optional) Integer of the gasPrice used for each paid energy
   - `value`: `QUANTITY`  - (optional) Integer of the value sent with this transaction
-  - `data`: `DATA`  - (optional) Hash of the method signature and encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) //TODO
+  - `data`: `DATA`  - (optional) Empty for pure balance transfers; otherwise, the encoding of a contract for deployment or a contract method call.  Details for encoding depends on VM for that type of transaction:
+     - [AionVM ABI specification](https://github.com/aionnetwork/AVM/wiki/ABI-Specification)
+     - [FastVM ABI specification](https://github.com/aionnetwork/aion_fastvm/wiki/Specifications#abi-types)
 2. `QUANTITY|TAG` - (optional) integer block number, or the string `"latest"`, `"earliest"` or `"pending"`, see the [default block parameter](#default-block-parameter)
 
 #### Returns
@@ -187,12 +189,8 @@ none
 #### Example
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "eth_coinbase",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "eth_coinbase", "params": [], "id": 1}
+
 #### Response
 
         {
@@ -346,7 +344,14 @@ Returns the balance of the account of given address.
 
 ##### Request
 
-        {"method":"eth_getBalance","params":["0xa0f37e8c51b4677a4925f6ba623319ca45262b567e98104af5879b7a88c2f25b"],"id":"1","jsonrpc":"2.0"}
+        {                                                                                                                                                                                                                   
+          "method": "eth_getBalance",
+          "params": [
+            "0xa0f37e8c51b4677a4925f6ba623319ca45262b567e98104af5879b7a88c2f25b"
+          ],  
+          "id": "1",
+          "jsonrpc": "2.0"
+        }
 
 ##### Response
 
@@ -392,7 +397,15 @@ Returns information about a block by hash.
 
 ##### Request
 
-        {"method":"eth_getBlockByHash","params":["0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52", true],"id":"1","jsonrpc":"2.0"}
+        {                                                                                                                                                                                                                   
+          "method": "eth_getBlockByHash",
+          "params": [
+            "0x8f8b3dd16c6c972d0910af4c50e13b4521966ff6d9909922bc1e366461b4fe52",
+            true
+          ],
+          "id": "1",
+          "jsonrpc": "2.0"
+        }
 
 ##### Response
 
@@ -460,7 +473,15 @@ See [eth_getBlockByHash](#eth_getBlockByHash)
 
 ##### Request
 
-        {"method":"eth_getBlockByNumber","params":["0x28cce9", "false"],"id":"1","jsonrpc":"2.0"}
+    {                                                                                                                                                                                                                   
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "0x28cce9",
+        "false"
+      ],
+      "id": "1",
+      "jsonrpc": "2.0"
+    }
 
 ##### Response
 
@@ -555,7 +576,15 @@ Returns code at a given address.
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getCode","params":["0xa03684c89bce58a355041ca0f0da8096fd9f38df0109d2003a646f822d25a03f", "latest"],"id":1}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getCode",
+          "params": [
+            "0xa03684c89bce58a355041ca0f0da8096fd9f38df0109d2003a646f822d25a03f",
+            "latest"
+          ],
+          "id": 1
+        }
 
 ##### Response
 
@@ -583,7 +612,7 @@ none
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getCompilers","params":[],"id":1}
+        {"jsonrpc":"2.0", "method":"eth_getCompilers", "params":[], "id":1}
 
 ##### Response
 
@@ -677,7 +706,14 @@ See [eth_getFilterChanges](#eth_getfilterchanges)
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getFilterLogs","params":["0x16"],"id":74}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getFilterLogs",
+          "params": [
+            "0x16"
+          ],
+          "id": 74
+        }
 
 ##### Response
 
@@ -842,7 +878,15 @@ See [eth_getTransactionByHash](#eth_gettransactionbyhash)
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getTransactionByBlockHashAndIndex","params":["0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465", "0x6"],"id":1}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getTransactionByBlockHashAndIndex",
+          "params": [
+            "0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465",
+            "0x6"
+          ],
+          "id": 1
+        }
 
 ##### Response
 
@@ -869,7 +913,15 @@ See [eth_getTransactionByHash](#eth_gettransactionbyhash)
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getTransactionByBlockNumberAndIndex","params":["0x6d39e", "0x6"],"id":1}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getTransactionByBlockNumberAndIndex",
+          "params": [
+            "0x6d39e",
+            "0x6"
+          ],
+          "id": 1
+        }
 
 ##### Response
 
@@ -909,7 +961,14 @@ Returns the information about a transaction requested by transaction hash.
 
 ##### Request
 
-        curl -s -X POST -H"Content-type: application/json"  --data '{"method":"eth_getTransactionByHash","params":["0xfafcae97932003ef1b6a896d51c47b2abb88d97339861dc803d21424dfe0402b"],"id":"1","jsonrpc":"2.0"}' http://localhost:6545
+        {                                                                                                                                                                                                                   
+          "method": "eth_getTransactionByHash",
+          "params": [
+            "0xfafcae97932003ef1b6a896d51c47b2abb88d97339861dc803d21424dfe0402b"
+          ],
+          "id": "1",
+          "jsonrpc": "2.0"
+        }
 
 ##### Response
 
@@ -954,7 +1013,15 @@ Returns the number of transactions *sent* from an address.
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getTransactionCount","params":["0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63","latest"],"id":1}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getTransactionCount",
+          "params": [
+            "0xa0211089e5a24c2af034b3f71b9149833a39814c13b75f06e1e487faec479c63",
+            "latest"
+          ],
+          "id": 1
+        }
 
 ##### Response
 
@@ -1003,7 +1070,14 @@ Returns the receipt of a transaction by transaction hash.
 
 ##### Request
 
-        {"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params":["0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831"],"id":1}
+        {                                                                                                                                                                                                                   
+          "jsonrpc": "2.0",
+          "method": "eth_getTransactionReceipt",
+          "params": [
+            "0x8571465914fca68c39dfd127a3a429856fccc9e121ccfc276ced4f95f3331831"
+          ],
+          "id": 1
+        }
 
 ##### Response
 
@@ -1110,12 +1184,7 @@ None
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "eth_newBlockFilter",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "eth_newBlockFilter", "params": [], "id": 1}
 
 ##### Response
 
@@ -1193,12 +1262,7 @@ None
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "eth_newPendingTransactionFilter",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "eth_newPendingTransactionFilter", "params": [], "id": 1 }
 
 ##### Response
 
@@ -1225,7 +1289,7 @@ none
 
 ##### Request 
 
-        {"jsonrpc":"2.0","method":"eth_protocolVersion","params":[],"id":1}
+        {"jsonrpc":"2.0", "method":"eth_protocolVersion", "params":[], "id":1}
 
 ##### Response
 
@@ -1292,7 +1356,7 @@ This method requires that the account of the transaction sender be unlocked.
      - [AionVM ABI specification](https://github.com/aionnetwork/AVM/wiki/ABI-Specification)
      - [FastVM ABI specification](https://github.com/aionnetwork/aion_fastvm/wiki/Specifications#abi-types)
   - `nonce`: `QUANTITY`  - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
-  -  `type`: `DATA` - (optional; defaults to `0x00`) Type code of transaction. For details, see http://abc //TODO
+  -  `type`: `DATA` - (optional; defaults to `0x00`) Type code of transaction.
 
 #### Returns
 
@@ -1427,12 +1491,7 @@ none
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "eth_syncing",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "eth_syncing", "params": [], "id": 1}
 
 ##### Response
 
@@ -1541,7 +1600,9 @@ This method requires that the account of the transaction sender be unlocked.
               "value": "0x0a",
               "hash": "0x3ad98b558a9b59f00c2326d5027dc473fea23c773a4a5b0a374bc7c6d8b43f1e",
               "gasPrice": "0x2540be400"
-              //TODO more fields
+              "timestamp": "0x5c8c04f9", //TODO 
+              "signature": "", //TODO
+              "type": "0x00"
             },
             "raw": "0xf89c0da0a06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f300620a8088000584f12f9c168882ea608800000002540be40001b860baa9780538faa8beae8b51968ef34922086135bc5a442a7187a5924828ba568e3af7c88b14f6209567eb2cd3ffaeb877327becf8722a13452c00469e0a5effd6ca87652036a03d6dd6a0c36581746946bc2318bf9334f2dd1cae5c4e26557b0b"
           },
@@ -1571,12 +1632,7 @@ none
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "net_version",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "net_version", "params": [], "id": 1}
 
 ##### Response
 
@@ -1604,12 +1660,7 @@ none
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "net_listening",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "net_listening", "params": [], "id": 1}
 
 ##### Response
 
@@ -1637,12 +1688,7 @@ none
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "net_peerCount",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "net_peerCount", "params": [], "id": 1}
 
 ##### Response
 
@@ -1672,12 +1718,7 @@ none
 
 ##### Request
 
-        {
-          "jsonrpc": "2.0",
-          "method": "web3_clientVersion",
-          "params": [],
-          "id": 1
-        }
+        {"jsonrpc": "2.0", "method": "web3_clientVersion", "params": [], "id": 1}
 
 ##### Response
 
@@ -1826,6 +1867,4 @@ Won't keep this table around in the final version, but putting it here to organi
 
 ### Spec TODOs
 
-- use consistent format for examples
-- "latest" "earliest" "pending" -- are they actually implemented in the places where they should be?  does it work for all methods where they're supposed to work?  also need to add a section explaining it in this spec
 - sanitize examples
