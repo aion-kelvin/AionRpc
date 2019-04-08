@@ -1,6 +1,7 @@
 # Aion JSON-RPC API Specification 1.0 [DRAFT]
 
-Last update: 2018-03-18
+Document last update: 2018-04-08
+API version: 1.0
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -156,7 +157,7 @@ none
 #### Response
 
         {
-          "result": 0x296bc1,
+          "result": '0x296bc1",
           "id": 1,
           "jsonrpc": "2.0"
         }
@@ -470,7 +471,7 @@ Returns information about a block by hash.
               {
                 "nrgPrice": "0x4a817c800",
                 "nrg": "0x7c1e",
-                "transactionIndex": 0,
+                "transactionIndex": "0x0",
                 "nonce": "0xebb",
                 "input": "0x4178462f00000000000000000000000000000021",
                 "blockNumber": "0x28cce9",
@@ -547,7 +548,8 @@ Returns the number of transactions in a block from a block matching the given bl
           "method": "eth_getBlockTransactionCountByHash",
           "params": [
             "0x49dc23204e4b0afcc0c43461777d13b67fbb77979d98c7f637adfed9086fb465"
-          ]
+          ],
+          "id": "1"
         }
 
 ##### Response
@@ -581,7 +583,8 @@ Returns the number of transactions in a block matching the given block number.
           "method": "eth_getBlockTransactionCountByNumber",
           "params": [
             "0x6d39e"
-          ]
+          ],
+          "id": "1"
         }
 
 ##### Response
@@ -1095,7 +1098,8 @@ Returns the receipt of a transaction by transaction hash.
   - `gasUsed `: `QUANTITY ` - same as `nrgUsed`; duplicated for Ethereum-compatibility purposes.
   - `nrgLimit `: `QUANTITY ` - The energy limit for the transaction
   - `gasLimit `: `QUANTITY ` - same as `nrgLimit`; duplicated for Ethereum-compatibility purposes.
-  -
+  - `nrgPrice `: `QUANTITY ` - energy price provided by the sender in nAmps.
+  - `gasPrice `: `QUANTITY ` - same as `nrgPrice`; duplicated for Ethereum-compatibility purposes.
   - `contractAddress `: `DATA`, 20 Bytes - The contract address created, if the transaction was a contract creation, otherwise `null`.
   - `logs`: `Array` - Array of log objects, which this transaction generated.
   - `logsBloom`: `DATA`, 256 Bytes - Bloom filter for light clients to quickly retrieve related logs.  
@@ -1476,7 +1480,7 @@ Used for submitting mining hashrate.
 
 #### Parameters
 
-1. `QUANTITY` - The filter id.
+1. `QUANTITY` - a hexadecimal string representation (32 bytes) of the hash rate
 2. `DATA` - A hexadecimal(32 bytes) ID identifying the client
 
 #### Returns
@@ -1601,6 +1605,7 @@ This method requires that the account of the transaction sender be unlocked.
 `Object`, the transaction object and raw signed transaction
 
   - `tx`: `Object` - The transaction that was signed (missing optional parameters are automatically populated by the kernel and those values are shown here). See parameters of [eth_sendTransaction](#eth_sendTransaction) for details on the transaction object.
+  - `raw`: `Object` - RLP-encoding of the signed transaction
 
 #### Example
 
@@ -1636,8 +1641,7 @@ This method requires that the account of the transaction sender be unlocked.
               "value": "0x0a",
               "hash": "0x3ad98b558a9b59f00c2326d5027dc473fea23c773a4a5b0a374bc7c6d8b43f1e",
               "gasPrice": "0x2540be400"
-              "timestamp": "0x5c8c04f9", //TODO 
-              "signature": "", //TODO
+              "timestamp": "0x5c8c04f9",
               "type": "0x00"
             },
             "raw": "0xf89c0da0a06092bf447554df44b55531d6fdc08dd2d3eb00be432fc24660579102f300620a8088000584f12f9c168882ea608800000002540be40001b860baa9780538faa8beae8b51968ef34922086135bc5a442a7187a5924828ba568e3af7c88b14f6209567eb2cd3ffaeb877327becf8722a13452c00469e0a5effd6ca87652036a03d6dd6a0c36581746946bc2318bf9334f2dd1cae5c4e26557b0b"
