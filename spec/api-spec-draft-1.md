@@ -1,6 +1,6 @@
 # Aion JSON-RPC API Specification 1.0 [DRAFT]
 
-Document last update: 2018-04-08
+Document last update: 2018-04-08 <br />
 API version: 1.0
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
