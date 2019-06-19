@@ -1,0 +1,11 @@
+- in this version, eth_*.request.json is for the params array of request
+- eth_*.response.json is the response structure
+
+
+check request:
+
+ajv validate -s eth_getBlockByNumber.request.json -r type.json -d ex.good-opt.json
+
+check response:
+
+

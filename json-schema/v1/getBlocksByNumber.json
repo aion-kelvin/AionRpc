@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    
+
+  	"type": "object",
+    "properties": {
+      "method":  { "type": "string", "pattern": "eth_getBlockByNumber" },
+      "jsonrpc": { "type": "string", "pattern": "2.0" },
+      "params":  { "type": "array", 
+                   "items": [ {"$ref": "type.json#/definitions/QUANTITY"},
+                              {"type": "boolean"}
+                            ]
+                 },
+      "id":      { "type": "string" }  
+    }
+}
+

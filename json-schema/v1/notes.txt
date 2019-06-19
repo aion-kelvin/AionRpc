@@ -1,0 +1,2 @@
+- in this version, getBlocksByNumber has the whole request object
+- validate with: ajv compile -s getBlocksByNumber.json -r type.json
