@@ -30,8 +30,9 @@ public class JsonSchemaTypeResolver {
      *   within a schema (and all its contained elements)
      *
      * @param schema root of the JsonSchema
-     * @param refsVisited output variable -- callers should give this an empty map;
-     *                    will be populated with
+     * @param refsVisited output variable: callers should give this an empty map;
+     *                    will be populated with custom type names and their
+     *                    JsonSchema "$ref" value
      * @return type descriptor of the schema
      * @throws SchemaException if an invalid structure is encountered
      */
@@ -83,7 +84,8 @@ public class JsonSchemaTypeResolver {
             }
             itemTypes.add(paramType.javaTypes.get(0));
         }
-        return new ParamType(ParamType.ParamKind.ONE_OF, itemTypes, null, refsVisited);
+        return new ParamType(
+            ParamType.ParamKind.ONE_OF, itemTypes, null, refsVisited);
     }
 
     private ParamType resolveObject(JsonNode subschema,
@@ -111,7 +113,8 @@ public class JsonSchemaTypeResolver {
             propNames.add(prop.getKey());
         }
 
-        return new ParamType(ParamType.ParamKind.OBJECT, propTypes, propNames, refsVisited);
+        return new ParamType(
+            ParamType.ParamKind.OBJECT, propTypes, propNames, refsVisited);
     }
 
     private ParamType resolveArray(JsonNode subschema,
@@ -135,14 +138,14 @@ public class JsonSchemaTypeResolver {
                 itemTypes.add(paramType.javaNames.get(0));
             }
         }
-        return new ParamType(ParamType.ParamKind.ARRAY, itemTypes, null, refsVisited);
+        return new ParamType(
+            ParamType.ParamKind.ARRAY, itemTypes, null, refsVisited);
     }
 
     private ParamType resolveRef(JsonNode subschema,
                                  Map<String, JsonSchemaRef> refsVisited) {
-        // item uses "$ref" -- form a string to represent the referenced
-        // subschema and remember its URI so later we can go and generate
-        // a Java class for it
+        // item uses "$ref" -- save the value into refsVisited
+        // so it can be dereferenced at a later time
         JsonNode node = subschema.get("$ref");
         final JsonSchemaRef ref = new JsonSchemaRef(node.asText());
 

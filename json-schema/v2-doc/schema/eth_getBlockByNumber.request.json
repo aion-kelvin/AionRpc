@@ -8,8 +8,8 @@
     "additionalItems": false,
     "items": [
         { 
-            "anyOf": [
-                {"$ref": "type.json#/definitions/QUANTITY"},
+            "oneOf": [
+                {"$ref": "type.json#/definitions/TAG"},
                 {"type": "boolean"}
             ],
             "description": "integer of a block number, or the string \"earliest\", \"latest\" or \"pending\", as in the default block parameter"

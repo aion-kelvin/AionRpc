@@ -65,7 +65,6 @@ public class RpcGen2 {
 
         for(int ix = 0; ix < t.javaNames.size(); ++ix ) {
             System.out.println(t.javaTypes.get(ix) + " " + t.javaNames.get(ix));
-
         }
 
         System.out.println();
