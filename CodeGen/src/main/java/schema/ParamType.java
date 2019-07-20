@@ -3,8 +3,10 @@ package schema;
 import java.util.*;
 
 /**
- * Characterizes type information about a type for RPC methods, as defined by
+ * Characterizes type information for a parameter in an RPC method, as defined by
  * a JsonSchema.  Also see {@link JsonSchemaTypeResolver}.
+ *
+ *
  */
 public class ParamType {
     /** Kind of parameter; see {@link ParamType} */

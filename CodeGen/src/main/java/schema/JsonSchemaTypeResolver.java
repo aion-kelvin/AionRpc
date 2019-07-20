@@ -15,6 +15,7 @@ import java.util.*;
  * Main method: {@link #resolve(JsonNode, Map)}
  */
 public class JsonSchemaTypeResolver {
+
     /**
      * Given a JsonSchema that represents a type definition for Aion RPC
      * server, return a {@link ParamType} describing that type, which can
@@ -46,12 +47,11 @@ public class JsonSchemaTypeResolver {
                     return new ParamType("java.lang.String");
                 case "boolean":
                     return new ParamType("boolean");
-                case "number":
-                    return new ParamType("int"); // TODO or long or BigInteger?
                 case "object":
                     return resolveObject(schema, refsVisited);
                 case "array":
                     return resolveArray(schema, refsVisited);
+                case "number": // not supporting number for now, not used anyway
                 default:
                     throw new UnsupportedOperationException(
                             "Unsupported or disallowed 'type' parameter: " + type);
@@ -59,6 +59,9 @@ public class JsonSchemaTypeResolver {
         } else if (schema.has("oneOf")) {
             return resolveOneOf(schema, refsVisited);
         } else if (schema.has("$ref")) {
+//            if("DATA".equals(schema.get("$ref"))) {
+//                return new ParamType("byte[]");
+//            }
             return resolveRef(schema, refsVisited);
         } else {
             throw new SchemaException(
@@ -148,6 +151,16 @@ public class JsonSchemaTypeResolver {
         // so it can be dereferenced at a later time
         JsonNode node = subschema.get("$ref");
         final JsonSchemaRef ref = new JsonSchemaRef(node.asText());
+
+
+
+//        if("DATA".equals(ref.getName()) // $ref points to DATA
+//            || (                        // or points to a schema with $ref to DATA
+//                node.has("$ref")
+//                    && node.get("$ref").asText().endsWith("DATA")
+//        )) {
+//            return new ParamType("byte[]");
+//        }
 
         JsonSchemaRef maybeExistingRef = refsVisited.get(ref.getName());
         if (maybeExistingRef == null) {

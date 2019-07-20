@@ -6,6 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Similar to {@link JsonSchemaTypeResolver}, but specialized for a specific purpose:
+ * resolving the types for an array whose schema defines it as fixed-size with different
+ * types each each element.  The normal {@link JsonSchemaTypeResolver} does not allow
+ * for arrays to contain elements on one type.
+ */
 public class JsonSchemaFixedMixedArrayResolver {
 
     private final JsonSchemaTypeResolver resolver;

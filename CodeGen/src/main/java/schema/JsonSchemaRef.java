@@ -1,5 +1,6 @@
 package schema;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Objects;
 
 /**
@@ -34,6 +35,28 @@ public class JsonSchemaRef {
     public String getName() {
         String[] parts = refValue.split("#")[1].split("/");
         return parts[parts.length - 1];
+    }
+
+    /**
+     * Follow the pointer of this reference to get the corresponding JSON node,
+     * starting from the given type definitions.
+     *
+     * @param typeDefinitionsRoot a JsonSchema with {@code definitions} field
+     * @return the node that this reference points at
+     */
+    public JsonNode dereference(JsonNode typeDefinitionsRoot) {
+        JsonNode deref = typeDefinitionsRoot;
+        JsonNode lastDeref = null;
+        // start at 1 because 0 is the root node which we're already in
+        for(int ix = 1; ix < getPath().length; ++ix) {
+            lastDeref = deref;
+            deref = deref.get(getPath()[ix]);
+            if(deref == null) {
+                throw new SchemaException("Broken reference at: " + lastDeref);
+            }
+        }
+
+        return deref;
     }
 
     /** @return the raw value */

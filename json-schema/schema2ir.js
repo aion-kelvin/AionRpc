@@ -93,7 +93,7 @@ var nonRecursivePrettyTypeName = (subschema) => {
 
 /** The callback for each node visited in the parameters schema */
 var paramsPreFunc = (subschema, path, schema, parentPath) => { 
-    //console.debug("preFunc2 path=", path, " parentPath=", parentPath, " parentPath.length=", parentPath.length, " path.length=", path.length, " path[0]=", path[0]);
+    console.debug("preFunc2 path=", path, " parentPath=", parentPath, " parentPath.length=", parentPath.length, " path.length=", path.length, " path[0]=", path[0]);
 
     // root node: get method information, print some title junk
     if(parentPath.length == 0 && path.length == 0) { 
@@ -114,7 +114,7 @@ var paramsPreFunc = (subschema, path, schema, parentPath) => {
 }
 
 var retPreFunc = (subschema, path, schema, parentPath) => { 
-    //console.debug("retPreFunc path=", path, " parentPath=", parentPath, " parentPath.length=", parentPath.length, " path.length=", path.length, " path[0]=", path[0]);
+    console.debug("retPreFunc path=", path, " parentPath=", parentPath, " parentPath.length=", parentPath.length, " path.length=", path.length, " path[0]=", path[0]);
 
     // root node
     if(parentPath.length == 0 && path.length == 0) { 
@@ -141,7 +141,7 @@ var retPreFunc = (subschema, path, schema, parentPath) => {
 }
 
 sw.schemaWalk( paramRoot, paramsPreFunc );
-sw.schemaWalk( retRoot, retPreFunc );
+//sw.schemaWalk( retRoot, retPreFunc );
 
 //console.log(util.inspect(md, false, null, true));
 console.log(JSON.stringify(md));

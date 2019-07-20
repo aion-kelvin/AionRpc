@@ -10,7 +10,7 @@
         { 
             "oneOf": [
                 {"$ref": "type.json#/definitions/TAG"},
-                {"$ref": "type.json#/definitions/QUANTITY"}
+                {"$ref": "type.json#/definitions/DATA32"}
             ],
             "description": "integer of a block number, or the string \"earliest\", \"latest\" or \"pending\", as in the default block parameter"
         },

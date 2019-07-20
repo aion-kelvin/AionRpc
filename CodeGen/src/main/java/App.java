@@ -6,13 +6,11 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,11 +19,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import schema.ByteArrayInliner;
 import schema.JsonSchemaFixedMixedArrayResolver;
 import schema.JsonSchemaRef;
 import schema.JsonSchemaTypeResolver;
 import schema.ParamType;
-import schema.SchemaException;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -54,17 +52,19 @@ public class App {
         JsonSchemaFixedMixedArrayResolver arrayResolver =
             new JsonSchemaFixedMixedArrayResolver();
         Map<String, JsonSchemaRef> visitedRefs = new HashMap<>();
+        ByteArrayInliner sub = new ByteArrayInliner(visitedRefs, typesSchemaRoot);
 
         // Parameter types to method signatures
         List<Set<String>> inputTypes = arrayResolver
             .resolve(reqRoot.get("items"), visitedRefs)
             .stream()
+            .map(t -> sub.inline(t))
             .map(t -> new HashSet<>(t.javaTypes))
             .collect(Collectors.toList());
         Set<List<String>> signatures = Sets.cartesianProduct(inputTypes);
 
         // Ftl setup for Request
-        Map<String, Object> ftlMap = new HashMap<String, Object>();
+        Map<String, Object> ftlMap = new HashMap<>();
         ftlMap.put("rpcMethodName", "eth_getBlockByNumber");
         ftlMap.put("sigs", signatures);
 
@@ -74,7 +74,7 @@ public class App {
         cfg.getTemplate("RpcInterface.java.ftl").process(ftlMap, consoleWriter);
 
         // Return value to class definition
-        ParamType outputType = resolver.resolve(rezRoot, visitedRefs);
+        ParamType outputType = sub.inline(resolver.resolve(rezRoot, visitedRefs));
         List<List<String>> typeNamePairs = new LinkedList<>();
         for(int ix = 0; ix < outputType.javaNames.size(); ++ix) {
             typeNamePairs.add(List.of(
@@ -99,18 +99,9 @@ public class App {
 
             System.out.println("// -- NEW DATATYPE: " + javaClassName + "--------------------------------");
 
-            JsonNode deref = typesSchemaRoot;
-            JsonNode lastDeref = null;
-            // start at 1 because 0 is the root node which we're already in
-            for(int ix = 1; ix < ref.getPath().length; ++ix) {
-                lastDeref = deref;
-                deref = deref.get(ref.getPath()[ix]);
-                if(deref == null) {
-                    throw new SchemaException("Broken reference at: " + lastDeref);
-                }
-            }
+            JsonNode deref = ref.dereference(typesSchemaRoot);
 
-            outputType = resolver.resolve(deref, visitedRefs);
+            outputType = sub.inline(resolver.resolve(deref, visitedRefs));
             typeNamePairs = new LinkedList<>();
             for(int ix = 0; ix < outputType.javaNames.size(); ++ix) {
                 typeNamePairs.add(List.of(
@@ -122,8 +113,6 @@ public class App {
             ftlMap.put("fields", typeNamePairs);
             cfg.getTemplate("RpcDataHolder.java.ftl").process(ftlMap, consoleWriter);
         }
-
-
     }
 
 }
