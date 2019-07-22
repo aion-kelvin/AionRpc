@@ -73,6 +73,8 @@ public class App {
         Writer consoleWriter = new OutputStreamWriter(System.out);
         cfg.getTemplate("RpcInterface.java.ftl").process(ftlMap, consoleWriter);
 
+        System.out.println("// -- REQUEST SWITCH/CALL------------------------------------");
+
         // Return value to class definition
         ParamType outputType = sub.inline(resolver.resolve(rezRoot, visitedRefs));
         List<List<String>> typeNamePairs = new LinkedList<>();
